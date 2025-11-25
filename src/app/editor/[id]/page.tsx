@@ -1,0 +1,311 @@
+"use client";
+
+import { useEffect, useState, use } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { CVEditor } from "@/components/cv/CVEditor";
+import { CVPreview } from "@/components/cv/CVPreview";
+import { TemplateSwitcher } from "@/components/cv/TemplateSwitcher";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCVStore } from "@/store/cvStore";
+import { useTranslation } from "@/store/languageStore";
+import { createClient } from "@/lib/supabaseClient";
+import { defaultCVData } from "@/types/cv";
+import {
+  FileText,
+  Save,
+  Download,
+  ArrowLeft,
+  Loader2,
+  Check,
+  ZoomIn,
+  ZoomOut,
+  User,
+} from "lucide-react";
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function EditorPage({ params }: PageProps) {
+  const { id } = use(params);
+  const router = useRouter();
+  const { t } = useTranslation();
+  const { cvData, setCVData, loadCVData, isDirty, setDirty } = useCVStore();
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [zoom, setZoom] = useState(0.7);
+  const [editingName, setEditingName] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      const supabase = createClient();
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      if (authUser) {
+        setUser({ id: authUser.id, email: authUser.email || "" });
+      }
+
+      if (id === "new") {
+        loadCVData({ ...defaultCVData, name: "Mon nouveau CV" });
+      } else {
+        // Fetch existing CV
+        const { data: cv } = await supabase
+          .from("cvs")
+          .select("*")
+          .eq("id", id)
+          .single();
+
+        if (cv) {
+          loadCVData(cv);
+        } else {
+          router.push("/editor/new");
+        }
+      }
+
+      setLoading(false);
+    };
+
+    init();
+  }, [id, loadCVData, router]);
+
+  const handleSave = async () => {
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+
+    setSaving(true);
+    const supabase = createClient();
+
+    const cvToSave = {
+      ...cvData,
+      user_id: user.id,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (id === "new" || !cvData.id) {
+      // Create new CV
+      const { data, error } = await supabase
+        .from("cvs")
+        .insert({
+          ...cvToSave,
+          created_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (data && !error) {
+        loadCVData(data);
+        router.replace(`/editor/${data.id}`);
+      }
+    } else {
+      // Update existing CV
+      await supabase
+        .from("cvs")
+        .update(cvToSave)
+        .eq("id", cvData.id);
+    }
+
+    setSaving(false);
+    setSaved(true);
+    setDirty(false);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleDownload = async () => {
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+
+    setDownloading(true);
+
+    try {
+      const response = await fetch("/api/pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cvData),
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${cvData.name || "cv"}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
+
+    setDownloading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen flex flex-col bg-slate-100">
+      {/* Header */}
+      <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <Link href={user ? "/dashboard" : "/"}>
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+              <FileText className="w-4 h-4 text-white" />
+            </div>
+          </Link>
+          
+          {/* CV Name */}
+          {editingName ? (
+            <Input
+              value={cvData.name}
+              onChange={(e) => setCVData({ name: e.target.value })}
+              onBlur={() => setEditingName(false)}
+              onKeyDown={(e) => e.key === "Enter" && setEditingName(false)}
+              className="w-48 h-8 text-sm"
+              autoFocus
+            />
+          ) : (
+            <button
+              className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+              onClick={() => setEditingName(true)}
+            >
+              {cvData.name}
+            </button>
+          )}
+
+          {isDirty && (
+            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+              {t("editor.unsaved")}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <TemplateSwitcher />
+          
+          <div className="h-6 w-px bg-slate-200 mx-2" />
+
+          <LanguageSwitcher />
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSave}
+            disabled={saving}
+            className="gap-2"
+          >
+            {saving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : saved ? (
+              <Check className="w-4 h-4 text-green-500" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            {saving ? t("editor.saving") : saved ? t("editor.saved") : t("editor.save")}
+          </Button>
+
+          <Button
+            size="sm"
+            onClick={handleDownload}
+            disabled={downloading || !user}
+            className="gap-2"
+          >
+            {downloading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            {t("editor.download")}
+          </Button>
+
+          {user ? (
+            <Link href="/dashboard">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 ml-2">
+                <User className="w-4 h-4 text-slate-500" />
+                <span className="text-xs text-slate-600 max-w-24 truncate">
+                  {user.email}
+                </span>
+              </div>
+            </Link>
+          ) : (
+            <Link href="/auth/login">
+              <Button variant="ghost" size="sm">
+                {t("nav.login")}
+              </Button>
+            </Link>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel - Editor */}
+        <div className="w-[480px] bg-white border-r border-slate-200 flex flex-col shrink-0">
+          <CVEditor />
+        </div>
+
+        {/* Right Panel - Preview */}
+        <div className="flex-1 bg-slate-200 overflow-auto relative">
+          {/* Zoom Controls */}
+          <div className="sticky top-4 left-4 z-10 flex items-center gap-2 bg-white rounded-lg shadow-sm border border-slate-200 p-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setZoom(Math.max(0.3, zoom - 0.1))}
+            >
+              <ZoomOut className="w-4 h-4" />
+            </Button>
+            <span className="text-xs text-slate-600 w-12 text-center">
+              {Math.round(zoom * 100)}%
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setZoom(Math.min(1.5, zoom + 0.1))}
+            >
+              <ZoomIn className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Preview Container */}
+          <div className="flex justify-center py-8 px-4">
+            <div
+              style={{
+                transform: `scale(${zoom})`,
+                transformOrigin: "top center",
+              }}
+            >
+              <CVPreview />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

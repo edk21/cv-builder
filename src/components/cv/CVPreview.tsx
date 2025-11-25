@@ -1,0 +1,419 @@
+"use client";
+
+import { useCVStore } from "@/store/cvStore";
+import { useTranslation } from "@/store/languageStore";
+import { formatDate } from "@/lib/utils";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Github,
+  Globe,
+} from "lucide-react";
+
+export function CVPreview() {
+  const { cvData } = useCVStore();
+  const { t } = useTranslation();
+  const { personalInfo, experiences, education, skills, projects, languages } = cvData;
+
+  // Template Modern
+  if (cvData.templateId === "modern" || cvData.templateId === "minimal") {
+    return (
+      <div className="a4-page p-8 text-slate-800 text-sm">
+        {/* Header */}
+        <header className="border-b-2 pb-6 mb-6" style={{ borderColor: cvData.themeColor }}>
+          <h1 className="text-3xl font-bold" style={{ color: cvData.themeColor }}>
+            {personalInfo.firstName || "Prénom"} {personalInfo.lastName || "Nom"}
+          </h1>
+          {personalInfo.title && (
+            <p className="text-lg text-slate-600 mt-1">{personalInfo.title}</p>
+          )}
+          
+          {/* Contact Info */}
+          <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-600">
+            {personalInfo.email && (
+              <div className="flex items-center gap-1">
+                <Mail className="w-3.5 h-3.5" />
+                <span>{personalInfo.email}</span>
+              </div>
+            )}
+            {personalInfo.phone && (
+              <div className="flex items-center gap-1">
+                <Phone className="w-3.5 h-3.5" />
+                <span>{personalInfo.phone}</span>
+              </div>
+            )}
+            {(personalInfo.city || personalInfo.country) && (
+              <div className="flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>
+                  {[personalInfo.city, personalInfo.country].filter(Boolean).join(", ")}
+                </span>
+              </div>
+            )}
+            {personalInfo.linkedin && (
+              <div className="flex items-center gap-1">
+                <Linkedin className="w-3.5 h-3.5" />
+                <span>LinkedIn</span>
+              </div>
+            )}
+            {personalInfo.github && (
+              <div className="flex items-center gap-1">
+                <Github className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </div>
+            )}
+            {personalInfo.website && (
+              <div className="flex items-center gap-1">
+                <Globe className="w-3.5 h-3.5" />
+                <span>Portfolio</span>
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* Summary */}
+        {personalInfo.summary && (
+          <section className="mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: cvData.themeColor }}>
+              {t("cv.profile")}
+            </h2>
+            <p className="text-slate-600 leading-relaxed">{personalInfo.summary}</p>
+          </section>
+        )}
+
+        {/* Experience */}
+        {experiences.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+              {t("cv.experience")}
+            </h2>
+            <div className="space-y-4">
+              {experiences.map((exp) => (
+                <div key={exp.id}>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">{exp.position || "Poste"}</h3>
+                      <p className="text-slate-600">{exp.company}{exp.location && ` • ${exp.location}`}</p>
+                    </div>
+                    <span className="text-xs text-slate-500 shrink-0">
+                      {formatDate(exp.startDate)} - {exp.current ? t("cv.present") : formatDate(exp.endDate)}
+                    </span>
+                  </div>
+                  {exp.description && (
+                    <p className="text-slate-600 mt-2 text-xs leading-relaxed">{exp.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Education */}
+        {education.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+              {t("cv.education")}
+            </h2>
+            <div className="space-y-4">
+              {education.map((edu) => (
+                <div key={edu.id}>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">{edu.degree} {edu.field && `en ${edu.field}`}</h3>
+                      <p className="text-slate-600">{edu.institution}{edu.location && ` • ${edu.location}`}</p>
+                    </div>
+                    <span className="text-xs text-slate-500 shrink-0">
+                      {formatDate(edu.startDate)} - {edu.current ? t("cv.present") : formatDate(edu.endDate)}
+                    </span>
+                  </div>
+                  {edu.description && (
+                    <p className="text-slate-600 mt-2 text-xs">{edu.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Skills */}
+        {skills.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+              {t("cv.skills")}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <span
+                  key={skill.id}
+                  className="px-3 py-1 rounded-full text-xs"
+                  style={{
+                    backgroundColor: `${cvData.themeColor}15`,
+                    color: cvData.themeColor,
+                  }}
+                >
+                  {skill.name || "Compétence"}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Projects */}
+        {projects.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+              {t("cv.projects")}
+            </h2>
+            <div className="space-y-4">
+              {projects.map((project) => (
+                <div key={project.id}>
+                  <h3 className="font-semibold">{project.name || "Projet"}</h3>
+                  {project.description && (
+                    <p className="text-slate-600 text-xs mt-1">{project.description}</p>
+                  )}
+                  {project.technologies.length > 0 && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      Technologies: {project.technologies.join(", ")}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Languages */}
+        {languages.length > 0 && (
+          <section>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+              {t("cv.languages")}
+            </h2>
+            <div className="flex flex-wrap gap-4">
+              {languages.map((lang) => (
+                <div key={lang.id} className="text-xs">
+                  <span className="font-medium">{lang.name || "Langue"}</span>
+                  <span className="text-slate-500 ml-2">({lang.level})</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    );
+  }
+
+  // Template Classic - Two columns
+  return (
+    <div className="a4-page flex text-slate-800 text-sm">
+      {/* Left Sidebar */}
+      <div
+        className="w-1/3 p-6 text-white"
+        style={{ backgroundColor: cvData.themeColor }}
+      >
+        {/* Name */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold leading-tight">
+            {personalInfo.firstName || "Prénom"}
+          </h1>
+          <h1 className="text-2xl font-bold leading-tight">
+            {personalInfo.lastName || "Nom"}
+          </h1>
+          {personalInfo.title && (
+            <p className="text-sm opacity-90 mt-2">{personalInfo.title}</p>
+          )}
+        </div>
+
+        {/* Contact */}
+        <div className="mb-8">
+          <h2 className="text-xs font-bold uppercase tracking-wider mb-3 opacity-75">
+            {t("cv.contact")}
+          </h2>
+          <div className="space-y-2 text-xs">
+            {personalInfo.email && (
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 opacity-75" />
+                <span className="break-all">{personalInfo.email}</span>
+              </div>
+            )}
+            {personalInfo.phone && (
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 opacity-75" />
+                <span>{personalInfo.phone}</span>
+              </div>
+            )}
+            {(personalInfo.city || personalInfo.country) && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 opacity-75" />
+                <span>
+                  {[personalInfo.city, personalInfo.country].filter(Boolean).join(", ")}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Skills */}
+        {skills.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xs font-bold uppercase tracking-wider mb-3 opacity-75">
+              {t("cv.skills")}
+            </h2>
+            <div className="space-y-2">
+              {skills.map((skill) => (
+                <div key={skill.id}>
+                  <div className="text-xs mb-1">{skill.name || "Compétence"}</div>
+                  <div className="h-1.5 bg-white/30 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-full"
+                      style={{
+                        width:
+                          skill.level === "expert"
+                            ? "100%"
+                            : skill.level === "avance"
+                            ? "80%"
+                            : skill.level === "intermediaire"
+                            ? "60%"
+                            : "40%",
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Languages */}
+        {languages.length > 0 && (
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider mb-3 opacity-75">
+              {t("cv.languages")}
+            </h2>
+            <div className="space-y-1 text-xs">
+              {languages.map((lang) => (
+                <div key={lang.id} className="flex justify-between">
+                  <span>{lang.name || "Langue"}</span>
+                  <span className="opacity-75">{lang.level}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Right Content */}
+      <div className="w-2/3 p-6">
+        {/* Summary */}
+        {personalInfo.summary && (
+          <section className="mb-6">
+            <h2
+              className="text-sm font-bold uppercase tracking-wider mb-2"
+              style={{ color: cvData.themeColor }}
+            >
+              {t("cv.profile")}
+            </h2>
+            <p className="text-slate-600 text-xs leading-relaxed">
+              {personalInfo.summary}
+            </p>
+          </section>
+        )}
+
+        {/* Experience */}
+        {experiences.length > 0 && (
+          <section className="mb-6">
+            <h2
+              className="text-sm font-bold uppercase tracking-wider mb-3"
+              style={{ color: cvData.themeColor }}
+            >
+              {t("cv.experience")}
+            </h2>
+            <div className="space-y-4">
+              {experiences.map((exp) => (
+                <div key={exp.id} className="relative pl-4 border-l-2" style={{ borderColor: cvData.themeColor }}>
+                  <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                  <div className="text-xs text-slate-500 mb-1">
+                    {formatDate(exp.startDate)} - {exp.current ? t("cv.present") : formatDate(exp.endDate)}
+                  </div>
+                  <h3 className="font-semibold text-sm">{exp.position || "Poste"}</h3>
+                  <p className="text-slate-600 text-xs">{exp.company}</p>
+                  {exp.description && (
+                    <p className="text-slate-600 text-xs mt-2 leading-relaxed">
+                      {exp.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Education */}
+        {education.length > 0 && (
+          <section className="mb-6">
+            <h2
+              className="text-sm font-bold uppercase tracking-wider mb-3"
+              style={{ color: cvData.themeColor }}
+            >
+              {t("cv.education")}
+            </h2>
+            <div className="space-y-4">
+              {education.map((edu) => (
+                <div key={edu.id} className="relative pl-4 border-l-2" style={{ borderColor: cvData.themeColor }}>
+                  <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                  <div className="text-xs text-slate-500 mb-1">
+                    {formatDate(edu.startDate)} - {edu.current ? t("cv.present") : formatDate(edu.endDate)}
+                  </div>
+                  <h3 className="font-semibold text-sm">
+                    {edu.degree} {edu.field && `- ${edu.field}`}
+                  </h3>
+                  <p className="text-slate-600 text-xs">{edu.institution}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Projects */}
+        {projects.length > 0 && (
+          <section>
+            <h2
+              className="text-sm font-bold uppercase tracking-wider mb-3"
+              style={{ color: cvData.themeColor }}
+            >
+              {t("cv.projects")}
+            </h2>
+            <div className="space-y-3">
+              {projects.map((project) => (
+                <div key={project.id}>
+                  <h3 className="font-semibold text-sm">{project.name || "Projet"}</h3>
+                  {project.description && (
+                    <p className="text-slate-600 text-xs mt-1">{project.description}</p>
+                  )}
+                  {project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {project.technologies.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded text-xs"
+                          style={{
+                            backgroundColor: `${cvData.themeColor}15`,
+                            color: cvData.themeColor,
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  );
+}
+
