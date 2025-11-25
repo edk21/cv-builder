@@ -12,6 +12,7 @@ Un SaaS moderne de création de CV avec prévisualisation en temps réel, templa
 - 📥 **Export PDF** - Téléchargez votre CV en haute qualité
 - 🔐 **Authentification** - Sauvegardez et gérez vos CV
 - 📱 **Responsive** - Interface adaptée à tous les écrans
+- 🌍 **Multilingue** - Interface disponible en 5 langues
 
 ## 🛠️ Stack Technique
 
@@ -84,8 +85,12 @@ src/
 ├── components/
 │   ├── cv/                 # Composants CV (Editor, Preview, etc.)
 │   └── ui/                 # Composants UI réutilisables
-├── lib/                    # Utilitaires et configuration
-├── store/                  # État global (Zustand)
+├── lib/
+│   ├── i18n/               # Traductions multilingues
+│   └── ...                 # Utilitaires et configuration
+├── store/
+│   ├── cvStore.ts          # État du CV
+│   └── languageStore.ts    # État de la langue
 └── types/                  # Types TypeScript
 ```
 
@@ -97,6 +102,86 @@ src/
 | **Classic**  | Style traditionnel à deux colonnes |
 | **Minimal**  | Design simple et élégant           |
 | **Creative** | Style audacieux et original        |
+
+## 🌍 Internationalisation (i18n)
+
+L'application supporte plusieurs langues avec un système de traduction intégré.
+
+### Langues disponibles
+
+| Langue     | Code | Drapeau |
+| ---------- | ---- | ------- |
+| Français   | `fr` | 🇫🇷      |
+| English    | `en` | 🇬🇧      |
+| Español    | `es` | 🇪🇸      |
+| Deutsch    | `de` | 🇩🇪      |
+| Nederlands | `nl` | 🇳🇱      |
+
+### Utilisation
+
+Le sélecteur de langue est disponible dans l'en-tête de l'application. La langue sélectionnée est persistée dans le `localStorage`.
+
+### Ajouter une nouvelle langue
+
+1. **Ouvrir le fichier de traductions** : `src/lib/i18n/translations.ts`
+
+2. **Ajouter le code de la langue** au type `LanguageCode` :
+
+```typescript
+export type LanguageCode = "fr" | "en" | "es" | "de" | "nl" | "votre_code";
+```
+
+3. **Ajouter les traductions** dans l'objet `translations` :
+
+```typescript
+export const translations: Record<LanguageCode, Record<string, string>> = {
+  // ... autres langues
+  votre_code: {
+    "nav.home": "Accueil",
+    "nav.editor": "Éditeur",
+    // ... toutes les clés de traduction
+  },
+};
+```
+
+4. **Ajouter la langue** dans le tableau `languages` :
+
+```typescript
+export const languages: Language[] = [
+  // ... autres langues
+  { code: "votre_code", name: "Nom de la langue", flag: "🏳️" },
+];
+```
+
+### Structure des traductions
+
+Les clés de traduction suivent une convention de nommage hiérarchique :
+
+- `nav.*` - Navigation
+- `landing.*` - Page d'accueil
+- `auth.*` - Authentification
+- `dashboard.*` - Tableau de bord
+- `editor.*` - Éditeur de CV
+  - `editor.profile.*` - Section profil
+  - `editor.experience.*` - Section expérience
+  - `editor.education.*` - Section formation
+  - `editor.skills.*` - Section compétences
+  - `editor.projects.*` - Section projets
+  - `editor.languages.*` - Section langues
+
+### Hook de traduction
+
+Utilisez le hook `useTranslation` dans vos composants :
+
+```typescript
+import { useTranslation } from "@/store/languageStore";
+
+function MonComposant() {
+  const { t } = useTranslation();
+
+  return <h1>{t("landing.title")}</h1>;
+}
+```
 
 ## 🔧 Scripts Disponibles
 
@@ -118,6 +203,7 @@ bun lint     # Linter le code
 - [x] Sélection de couleur
 - [x] Sauvegarde automatique
 - [x] Export PDF
+- [x] Interface multilingue (FR, EN, ES, DE, NL)
 
 ## 🔮 Roadmap
 
