@@ -1,15 +1,15 @@
 "use client";
 
+import { formatDate } from "@/lib/utils";
 import { useCVStore } from "@/store/cvStore";
 import { useTranslation } from "@/store/languageStore";
-import { formatDate } from "@/lib/utils";
 import {
-  Mail,
-  Phone,
-  MapPin,
-  Linkedin,
   Github,
   Globe,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
 } from "lucide-react";
 
 export function CVPreview() {
@@ -24,12 +24,12 @@ export function CVPreview() {
         {/* Header */}
         <header className="border-b-2 pb-6 mb-6" style={{ borderColor: cvData.themeColor }}>
           <h1 className="text-3xl font-bold" style={{ color: cvData.themeColor }}>
-            {personalInfo.firstName || "Prénom"} {personalInfo.lastName || "Nom"}
+            {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
           </h1>
           {personalInfo.title && (
             <p className="text-lg text-slate-600 mt-1">{personalInfo.title}</p>
           )}
-          
+
           {/* Contact Info */}
           <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-600">
             {personalInfo.email && (
@@ -94,7 +94,7 @@ export function CVPreview() {
                 <div key={exp.id}>
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold">{exp.position || "Poste"}</h3>
+                      <h3 className="font-semibold">{exp.position || t("cv.placeholder.position")}</h3>
                       <p className="text-slate-600">{exp.company}{exp.location && ` • ${exp.location}`}</p>
                     </div>
                     <span className="text-xs text-slate-500 shrink-0">
@@ -153,7 +153,7 @@ export function CVPreview() {
                     color: cvData.themeColor,
                   }}
                 >
-                  {skill.name || "Compétence"}
+                  {skill.name || t("cv.placeholder.skill")}
                 </span>
               ))}
             </div>
@@ -169,7 +169,33 @@ export function CVPreview() {
             <div className="space-y-4">
               {projects.map((project) => (
                 <div key={project.id}>
-                  <h3 className="font-semibold">{project.name || "Projet"}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">{project.name || t("cv.placeholder.project")}</h3>
+                    {project.url && (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline"
+                        style={{ color: cvData.themeColor }}
+                      >
+                        <Globe className="w-3 h-3" />
+                        <span>Demo</span>
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline"
+                        style={{ color: cvData.themeColor }}
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                  </div>
                   {project.description && (
                     <p className="text-slate-600 text-xs mt-1">{project.description}</p>
                   )}
@@ -193,7 +219,7 @@ export function CVPreview() {
             <div className="flex flex-wrap gap-4">
               {languages.map((lang) => (
                 <div key={lang.id} className="text-xs">
-                  <span className="font-medium">{lang.name || "Langue"}</span>
+                  <span className="font-medium">{lang.name || t("cv.placeholder.language")}</span>
                   <span className="text-slate-500 ml-2">({lang.level})</span>
                 </div>
               ))}
@@ -215,10 +241,10 @@ export function CVPreview() {
         {/* Name */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold leading-tight">
-            {personalInfo.firstName || "Prénom"}
+            {personalInfo.firstName || t("cv.placeholder.firstName")}
           </h1>
           <h1 className="text-2xl font-bold leading-tight">
-            {personalInfo.lastName || "Nom"}
+            {personalInfo.lastName || t("cv.placeholder.lastName")}
           </h1>
           {personalInfo.title && (
             <p className="text-sm opacity-90 mt-2">{personalInfo.title}</p>
@@ -263,7 +289,7 @@ export function CVPreview() {
             <div className="space-y-2">
               {skills.map((skill) => (
                 <div key={skill.id}>
-                  <div className="text-xs mb-1">{skill.name || "Compétence"}</div>
+                  <div className="text-xs mb-1">{skill.name || t("cv.placeholder.skill")}</div>
                   <div className="h-1.5 bg-white/30 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-white rounded-full"
@@ -272,10 +298,10 @@ export function CVPreview() {
                           skill.level === "expert"
                             ? "100%"
                             : skill.level === "avance"
-                            ? "80%"
-                            : skill.level === "intermediaire"
-                            ? "60%"
-                            : "40%",
+                              ? "80%"
+                              : skill.level === "intermediaire"
+                                ? "60%"
+                                : "40%",
                       }}
                     />
                   </div>
@@ -294,7 +320,7 @@ export function CVPreview() {
             <div className="space-y-1 text-xs">
               {languages.map((lang) => (
                 <div key={lang.id} className="flex justify-between">
-                  <span>{lang.name || "Langue"}</span>
+                  <span>{lang.name || t("cv.placeholder.language")}</span>
                   <span className="opacity-75">{lang.level}</span>
                 </div>
               ))}
@@ -336,7 +362,7 @@ export function CVPreview() {
                   <div className="text-xs text-slate-500 mb-1">
                     {formatDate(exp.startDate)} - {exp.current ? t("cv.present") : formatDate(exp.endDate)}
                   </div>
-                  <h3 className="font-semibold text-sm">{exp.position || "Poste"}</h3>
+                  <h3 className="font-semibold text-sm">{exp.position || t("cv.placeholder.position")}</h3>
                   <p className="text-slate-600 text-xs">{exp.company}</p>
                   {exp.description && (
                     <p className="text-slate-600 text-xs mt-2 leading-relaxed">
@@ -387,7 +413,33 @@ export function CVPreview() {
             <div className="space-y-3">
               {projects.map((project) => (
                 <div key={project.id}>
-                  <h3 className="font-semibold text-sm">{project.name || "Projet"}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-sm">{project.name || t("cv.placeholder.project")}</h3>
+                    {project.url && (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline"
+                        style={{ color: cvData.themeColor }}
+                      >
+                        <Globe className="w-3 h-3" />
+                        <span>Demo</span>
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline"
+                        style={{ color: cvData.themeColor }}
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                  </div>
                   {project.description && (
                     <p className="text-slate-600 text-xs mt-1">{project.description}</p>
                   )}

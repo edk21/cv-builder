@@ -117,10 +117,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.saving": "Sauvegarde...",
     "editor.saved": "Sauvegardé",
     "editor.download": "Télécharger PDF",
+    "editor.preview": "Prévisualiser",
+    "editor.previewTitle": "Aperçu du CV",
+    "editor.previewDesc": "Voici comment votre CV apparaîtra une fois téléchargé",
     "editor.template": "Template",
     "editor.color": "Couleur",
     "editor.unsaved": "Non sauvegardé",
     "editor.zoom": "Zoom",
+    "editor.newCvName": "Mon nouveau CV",
 
     // Editor Tabs
     "editor.tab.profile": "Profil",
@@ -225,6 +229,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.languages": "Langues",
     "cv.contact": "Contact",
     "cv.present": "Présent",
+    "cv.placeholder.firstName": "Prénom",
+    "cv.placeholder.lastName": "Nom",
+    "cv.placeholder.position": "Poste",
+    "cv.placeholder.skill": "Compétence",
+    "cv.placeholder.project": "Projet",
+    "cv.placeholder.language": "Langue",
 
     // Common
     "common.or": "ou",
@@ -341,10 +351,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.saving": "Saving...",
     "editor.saved": "Saved",
     "editor.download": "Download PDF",
+    "editor.preview": "Preview",
+    "editor.previewTitle": "CV Preview",
+    "editor.previewDesc": "This is how your CV will look when downloaded",
     "editor.template": "Template",
     "editor.color": "Color",
     "editor.unsaved": "Unsaved",
     "editor.zoom": "Zoom",
+    "editor.newCvName": "My new CV",
 
     // Editor Tabs
     "editor.tab.profile": "Profile",
@@ -449,6 +463,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.languages": "Languages",
     "cv.contact": "Contact",
     "cv.present": "Present",
+    "cv.placeholder.firstName": "First Name",
+    "cv.placeholder.lastName": "Last Name",
+    "cv.placeholder.position": "Position",
+    "cv.placeholder.skill": "Skill",
+    "cv.placeholder.project": "Project",
+    "cv.placeholder.language": "Language",
 
     // Common
     "common.or": "or",
@@ -565,10 +585,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.saving": "Guardando...",
     "editor.saved": "Guardado",
     "editor.download": "Descargar PDF",
+    "editor.preview": "Vista previa",
+    "editor.previewTitle": "Vista previa del CV",
+    "editor.previewDesc": "Así es como se verá tu CV cuando lo descargues",
     "editor.template": "Plantilla",
     "editor.color": "Color",
     "editor.unsaved": "Sin guardar",
     "editor.zoom": "Zoom",
+    "editor.newCvName": "Mi nuevo CV",
 
     // Editor Tabs
     "editor.tab.profile": "Perfil",
@@ -673,6 +697,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.languages": "Idiomas",
     "cv.contact": "Contacto",
     "cv.present": "Presente",
+    "cv.placeholder.firstName": "Nombre",
+    "cv.placeholder.lastName": "Apellido",
+    "cv.placeholder.position": "Puesto",
+    "cv.placeholder.skill": "Habilidad",
+    "cv.placeholder.project": "Proyecto",
+    "cv.placeholder.language": "Idioma",
 
     // Common
     "common.or": "o",
@@ -759,9 +789,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.saving": "Speichert...",
     "editor.saved": "Gespeichert",
     "editor.download": "PDF herunterladen",
+    "editor.preview": "Vorschau",
+    "editor.previewTitle": "Lebenslauf-Vorschau",
+    "editor.previewDesc": "So wird Ihr Lebenslauf nach dem Herunterladen aussehen",
     "editor.template": "Vorlage",
     "editor.color": "Farbe",
     "editor.unsaved": "Nicht gespeichert",
+    "editor.newCvName": "Mein neuer Lebenslauf",
 
     "editor.tab.profile": "Profil",
     "editor.tab.experience": "Erfahrung",
@@ -792,6 +826,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.languages": "Sprachen",
     "cv.contact": "Kontakt",
     "cv.present": "Heute",
+    "cv.placeholder.firstName": "Vorname",
+    "cv.placeholder.lastName": "Nachname",
+    "cv.placeholder.position": "Position",
+    "cv.placeholder.skill": "Fähigkeit",
+    "cv.placeholder.project": "Projekt",
+    "cv.placeholder.language": "Sprache",
 
     "common.or": "oder",
     "common.loading": "Laden...",
@@ -1003,10 +1043,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.saving": "Opslaan...",
     "editor.saved": "Opgeslagen",
     "editor.download": "PDF Downloaden",
+    "editor.preview": "Voorbeeld",
+    "editor.previewTitle": "CV Voorbeeld",
+    "editor.previewDesc": "Zo zal je CV eruitzien na het downloaden",
     "editor.template": "Sjabloon",
     "editor.color": "Kleur",
     "editor.unsaved": "Niet opgeslagen",
     "editor.zoom": "Zoom",
+    "editor.newCvName": "Mijn nieuwe CV",
 
     // Editor Tabs
     "editor.tab.profile": "Profiel",
@@ -1111,6 +1155,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.languages": "Talen",
     "cv.contact": "Contact",
     "cv.present": "Heden",
+    "cv.placeholder.firstName": "Voornaam",
+    "cv.placeholder.lastName": "Achternaam",
+    "cv.placeholder.position": "Functie",
+    "cv.placeholder.skill": "Vaardigheid",
+    "cv.placeholder.project": "Project",
+    "cv.placeholder.language": "Taal",
 
     // Common
     "common.or": "of",

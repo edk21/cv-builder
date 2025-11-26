@@ -9,10 +9,18 @@ import { TemplateSwitcher } from "@/components/cv/TemplateSwitcher";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useCVStore } from "@/store/cvStore";
-import { useTranslation } from "@/store/languageStore";
+import { useTranslation, useLanguageStore } from "@/store/languageStore";
 import { createClient } from "@/lib/supabaseClient";
 import { defaultCVData } from "@/types/cv";
+import { translations } from "@/lib/i18n/translations";
 import {
   FileText,
   Save,
@@ -23,6 +31,7 @@ import {
   ZoomIn,
   ZoomOut,
   User,
+  Eye,
 } from "lucide-react";
 
 interface PageProps {
@@ -41,6 +50,12 @@ export default function EditorPage({ params }: PageProps) {
   const [downloading, setDownloading] = useState(false);
   const [zoom, setZoom] = useState(0.7);
   const [editingName, setEditingName] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  // Check if the CV name is a default translated name (for dynamic translation)
+  const defaultCvNames = Object.values(translations).map(t => t["editor.newCvName"]).filter(Boolean);
+  const isDefaultName = defaultCvNames.includes(cvData.name);
+  const displayName = isDefaultName ? t("editor.newCvName") : cvData.name;
 
   useEffect(() => {
     const init = async () => {
@@ -52,7 +67,11 @@ export default function EditorPage({ params }: PageProps) {
       }
 
       if (id === "new") {
-        loadCVData({ ...defaultCVData, name: "Mon nouveau CV" });
+        // Get translation without adding dependency to avoid re-running on language change
+        const translate = useLanguageStore.getState().t;
+        loadCVData({ ...defaultCVData, name: translate("editor.newCvName") });
+        // Mark as dirty since this is a new unsaved CV
+        setDirty(true);
       } else {
         // Fetch existing CV
         const { data: cv } = await supabase
@@ -72,7 +91,7 @@ export default function EditorPage({ params }: PageProps) {
     };
 
     init();
-  }, [id, loadCVData, router]);
+  }, [id, loadCVData, router, setDirty]);
 
   const handleSave = async () => {
     if (!user) {
@@ -180,10 +199,24 @@ export default function EditorPage({ params }: PageProps) {
           {/* CV Name */}
           {editingName ? (
             <Input
-              value={cvData.name}
+              value={isDefaultName ? "" : cvData.name}
+              placeholder={t("editor.newCvName")}
               onChange={(e) => setCVData({ name: e.target.value })}
-              onBlur={() => setEditingName(false)}
-              onKeyDown={(e) => e.key === "Enter" && setEditingName(false)}
+              onBlur={() => {
+                // If empty, set back to default translated name
+                if (!cvData.name.trim()) {
+                  setCVData({ name: t("editor.newCvName") });
+                }
+                setEditingName(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (!cvData.name.trim()) {
+                    setCVData({ name: t("editor.newCvName") });
+                  }
+                  setEditingName(false);
+                }
+              }}
               className="w-48 h-8 text-sm"
               autoFocus
             />
@@ -192,7 +225,7 @@ export default function EditorPage({ params }: PageProps) {
               className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
               onClick={() => setEditingName(true)}
             >
-              {cvData.name}
+              {displayName}
             </button>
           )}
 
@@ -225,6 +258,16 @@ export default function EditorPage({ params }: PageProps) {
               <Save className="w-4 h-4" />
             )}
             {saving ? t("editor.saving") : saved ? t("editor.saved") : t("editor.save")}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowPreview(true)}
+            className="gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            {t("editor.preview")}
           </Button>
 
           <Button
@@ -305,6 +348,34 @@ export default function EditorPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 overflow-hidden">
+          <DialogHeader className="p-6 pb-4 border-b">
+            <DialogTitle>{t("editor.previewTitle")}</DialogTitle>
+            <DialogDescription>{t("editor.previewDesc")}</DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto bg-slate-200 p-8">
+            <div className="flex justify-center">
+              <CVPreview />
+            </div>
+          </div>
+          <div className="p-4 border-t bg-white flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setShowPreview(false)}>
+              {t("common.back")}
+            </Button>
+            <Button onClick={() => { setShowPreview(false); handleDownload(); }} disabled={downloading || !user} className="gap-2">
+              {downloading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              {t("editor.download")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
