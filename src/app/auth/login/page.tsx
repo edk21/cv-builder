@@ -23,21 +23,24 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         setError("Email ou mot de passe incorrect");
+        setLoading(false);
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
-    } catch {
+      if (data.session) {
+        // Use window.location for a full page reload to ensure cookies are properly set
+        window.location.href = "/dashboard";
+      }
+    } catch (err) {
+      console.error("Login error:", err);
       setError("Une erreur est survenue. Veuillez réessayer.");
-    } finally {
       setLoading(false);
     }
   };

@@ -73,16 +73,18 @@ export default function EditorPage({ params }: PageProps) {
         // Mark as dirty since this is a new unsaved CV
         setDirty(true);
       } else {
-        // Fetch existing CV
-        const { data: cv } = await supabase
-          .from("cvs")
-          .select("*")
-          .eq("id", id)
-          .single();
-
-        if (cv) {
-          loadCVData(cv);
-        } else {
+        // Fetch existing CV via API
+        try {
+          const response = await fetch(`/api/cv?id=${id}`);
+          if (response.ok) {
+            const cv = await response.json();
+            loadCVData(cv);
+          } else {
+            console.error("Failed to load CV");
+            router.push("/editor/new");
+          }
+        } catch (error) {
+          console.error("Error loading CV:", error);
           router.push("/editor/new");
         }
       }
@@ -100,41 +102,88 @@ export default function EditorPage({ params }: PageProps) {
     }
 
     setSaving(true);
-    const supabase = createClient();
 
-    const cvToSave = {
-      ...cvData,
-      user_id: user.id,
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      // Ensure all required fields are present
+      const dataToSave = {
+        ...cvData,
+        name: cvData.name || t("editor.newCvName"),
+        templateId: cvData.templateId || "modern",
+        themeColor: cvData.themeColor || "#2563eb",
+        personalInfo: cvData.personalInfo || {},
+        experiences: cvData.experiences || [],
+        education: cvData.education || [],
+        skills: cvData.skills || [],
+        projects: cvData.projects || [],
+        languages: cvData.languages || [],
+        certifications: cvData.certifications || [],
+      };
 
-    if (id === "new" || !cvData.id) {
-      // Create new CV
-      const { data, error } = await supabase
-        .from("cvs")
-        .insert({
-          ...cvToSave,
-          created_at: new Date().toISOString(),
-        })
-        .select()
-        .single();
+      if (id === "new" || !cvData.id) {
+        // Create new CV via API
+        const response = await fetch("/api/cv", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSave),
+        });
 
-      if (data && !error) {
-        loadCVData(data);
-        router.replace(`/editor/${data.id}`);
+        if (response.ok) {
+          const savedCV = await response.json();
+          loadCVData(savedCV);
+          router.replace(`/editor/${savedCV.id}`);
+          setSaving(false);
+          setSaved(true);
+          setDirty(false);
+          setTimeout(() => setSaved(false), 2000);
+        } else {
+          let errorMessage = "Erreur inconnue";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorMessage;
+            console.error("Failed to create CV - API error:", errorData);
+          } catch (e) {
+            console.error("Failed to create CV - Response status:", response.status, response.statusText);
+          }
+          setSaving(false);
+          alert(`Erreur lors de la sauvegarde: ${errorMessage}`);
+        }
+      } else {
+        // Update existing CV via API
+        const response = await fetch("/api/cv", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSave),
+        });
+
+        if (response.ok) {
+          const savedCV = await response.json();
+          setSaving(false);
+          setSaved(true);
+          setDirty(false);
+          setTimeout(() => setSaved(false), 2000);
+        } else {
+          let errorMessage = "Erreur inconnue";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorMessage;
+            console.error("Failed to update CV - API error:", errorData);
+          } catch (e) {
+            console.error("Failed to update CV - Response status:", response.status, response.statusText);
+          }
+          setSaving(false);
+          alert(`Erreur lors de la sauvegarde: ${errorMessage}`);
+        }
       }
-    } else {
-      // Update existing CV
-      await supabase
-        .from("cvs")
-        .update(cvToSave)
-        .eq("id", cvData.id);
+    } catch (error) {
+      console.error("Error saving CV:", error);
+      setSaving(false);
+      const errorMessage = error instanceof Error ? error.message : "Erreur inconnue";
+      alert(`Erreur lors de la sauvegarde: ${errorMessage}`);
     }
-
-    setSaving(false);
-    setSaved(true);
-    setDirty(false);
-    setTimeout(() => setSaved(false), 2000);
   };
 
   const handleDownload = async () => {
