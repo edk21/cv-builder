@@ -338,7 +338,31 @@ export function CVPreview() {
             <div className="space-y-4">
               {projects.map((project) => (
                 <div key={project.id}>
-                  <h3 className="font-normal text-base">{project.name || t("cv.placeholder.project")}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-normal text-base">{project.name || t("cv.placeholder.project")}</h3>
+                    {project.url && (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline text-slate-500"
+                      >
+                        <Globe className="w-3 h-3" />
+                        <span>Demo</span>
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs hover:underline text-slate-500"
+                      >
+                        <Github className="w-3 h-3" />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                  </div>
                   {project.description && (
                     <p className="text-slate-500 text-xs mt-1">{project.description}</p>
                   )}
