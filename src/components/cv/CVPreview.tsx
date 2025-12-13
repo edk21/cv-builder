@@ -634,11 +634,11 @@ export function CVPreview() {
     return (
       <div className="a4-page p-6 text-slate-800 text-sm relative overflow-hidden">
         {/* Background accent */}
-        <div 
+        <div
           className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-3xl"
           style={{ backgroundColor: cvData.themeColor }}
         />
-        <div 
+        <div
           className="absolute bottom-0 left-0 w-24 h-24 opacity-10 rounded-full blur-2xl"
           style={{ backgroundColor: cvData.themeColor }}
         />
