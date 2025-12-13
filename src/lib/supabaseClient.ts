@@ -12,10 +12,22 @@ export function createClient() {
             return { name, value: decodeURIComponent(rest.join("=")) };
           });
         },
-        setAll(cookiesToSet) {
+        setAll(
+          cookiesToSet: Array<{
+            name: string;
+            value: string;
+            options?: {
+              path?: string;
+              maxAge?: number;
+              domain?: string;
+              sameSite?: string;
+              secure?: boolean;
+            };
+          }>
+        ) {
           cookiesToSet.forEach(({ name, value, options }) => {
             let cookieString = `${name}=${encodeURIComponent(value)}`;
-            
+
             if (options?.path) {
               cookieString += `; path=${options.path}`;
             }
@@ -31,7 +43,7 @@ export function createClient() {
             if (options?.secure) {
               cookieString += `; secure`;
             }
-            
+
             document.cookie = cookieString;
           });
         },
