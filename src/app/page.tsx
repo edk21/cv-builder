@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslation } from "@/store/languageStore";
+import { createClient } from "@/lib/supabaseClient";
 import {
   FileText,
   Sparkles,
@@ -13,10 +15,19 @@ import {
   Shield,
   ArrowRight,
   Check,
+  User,
 } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const [user, setUser] = useState<{ email?: string } | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
 
   const features = [
     {
@@ -99,14 +110,27 @@ export default function HomePage() {
             </nav>
             <div className="flex items-center gap-3">
               <LanguageSwitcher />
-              <Link href="/auth/login">
-                <Button variant="ghost" size="sm">
-                  {t("nav.login")}
-                </Button>
-              </Link>
-              <Link href="/auth/signup">
-                <Button size="sm">{t("nav.signup")}</Button>
-              </Link>
+              {user ? (
+                <Link href="/dashboard">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100">
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span className="text-sm font-medium text-slate-600">
+                      {user.email}
+                    </span>
+                  </div>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button variant="ghost" size="sm">
+                      {t("nav.login")}
+                    </Button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <Button size="sm">{t("nav.signup")}</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

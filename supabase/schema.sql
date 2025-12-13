@@ -30,18 +30,22 @@ ALTER TABLE cvs ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 -- Users can only see their own CVs
+DROP POLICY IF EXISTS "Users can view own cvs" ON cvs;
 CREATE POLICY "Users can view own cvs" ON cvs
   FOR SELECT USING (auth.uid() = user_id);
 
 -- Users can insert their own CVs
+DROP POLICY IF EXISTS "Users can insert own cvs" ON cvs;
 CREATE POLICY "Users can insert own cvs" ON cvs
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- Users can update their own CVs
+DROP POLICY IF EXISTS "Users can update own cvs" ON cvs;
 CREATE POLICY "Users can update own cvs" ON cvs
   FOR UPDATE USING (auth.uid() = user_id);
 
 -- Users can delete their own CVs
+DROP POLICY IF EXISTS "Users can delete own cvs" ON cvs;
 CREATE POLICY "Users can delete own cvs" ON cvs
   FOR DELETE USING (auth.uid() = user_id);
 
@@ -55,6 +59,7 @@ END;
 $$ language 'plpgsql';
 
 -- Trigger to auto-update updated_at
+DROP TRIGGER IF EXISTS update_cvs_updated_at ON cvs;
 CREATE TRIGGER update_cvs_updated_at
   BEFORE UPDATE ON cvs
   FOR EACH ROW

@@ -122,3 +122,24 @@ export const defaultCVData: CVData = {
   certifications: [],
 };
 
+
+// ... existing types ...
+
+// Database Schema Types
+// Database Schema Types
+export interface CVDBSchema {
+  id: string;
+  user_id: string;
+  name: string;        // map to 'name' column
+  template_id: string; // map to 'template_id' column
+  theme_color: string; // map to 'theme_color' column
+  personal_info: PersonalInfo;
+  experiences: Experience[];
+  education: Education[];
+  skills: Skill[];
+  projects: Project[];
+  languages: Language[];
+  certifications: Certification[];
+  created_at: string;
+  updated_at: string;
+}

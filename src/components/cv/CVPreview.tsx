@@ -277,6 +277,24 @@ export function CVPreview() {
                 </span>
               </div>
             )}
+            {personalInfo.linkedin && (
+              <div className="flex items-center gap-2">
+                <Linkedin className="w-3.5 h-3.5 opacity-75" />
+                <span className="break-all">LinkedIn</span>
+              </div>
+            )}
+            {personalInfo.github && (
+              <div className="flex items-center gap-2">
+                <Github className="w-3.5 h-3.5 opacity-75" />
+                <span className="break-all">GitHub</span>
+              </div>
+            )}
+            {personalInfo.website && (
+              <div className="flex items-center gap-2">
+                <Globe className="w-3.5 h-3.5 opacity-75" />
+                <span className="break-all">Portfolio</span>
+              </div>
+            )}
           </div>
         </div>
 

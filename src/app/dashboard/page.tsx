@@ -29,7 +29,7 @@ export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const checkAuthAndFetchData = async () => {
       const supabase = createClient();
       
       const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -44,21 +44,22 @@ export default function DashboardPage() {
         name: authUser.user_metadata?.full_name,
       });
 
-      // Fetch CVs
-      const { data: cvs } = await supabase
-        .from("cvs")
-        .select("*")
-        .eq("user_id", authUser.id)
-        .order("updated_at", { ascending: false });
-
-      if (cvs) {
-        setCvList(cvs);
+      try {
+        const response = await fetch("/api/cv");
+        if (response.ok) {
+          const cvs = await response.json();
+          setCvList(cvs);
+        } else {
+          console.error("Failed to fetch CVs");
+        }
+      } catch (error) {
+        console.error("Error fetching CVs:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
-    fetchData();
+    checkAuthAndFetchData();
   }, [router]);
 
   const handleLogout = async () => {
@@ -71,41 +72,57 @@ export default function DashboardPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce CV ?")) return;
 
-    const supabase = createClient();
-    await supabase.from("cvs").delete().eq("id", id);
-    setCvList(cvList.filter((cv) => cv.id !== id));
-    setMenuOpen(null);
+    try {
+      const response = await fetch(`/api/cv?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setCvList(cvList.filter((cv) => cv.id !== id));
+        setMenuOpen(null);
+      } else {
+        console.error("Failed to delete CV");
+        alert("Erreur lors de la suppression du CV");
+      }
+    } catch (error) {
+      console.error("Error deleting CV:", error);
+      alert("Erreur lors de la suppression du CV");
+    }
   };
 
   const handleDuplicate = async (cv: CVData) => {
-    const supabase = createClient();
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    
-    if (!authUser) return;
+    try {
+      const newCVData = {
+        ...cv,
+        id: undefined, // Let the server/DB assign a new ID
+        name: `${cv.name} (copie)`,
+      };
 
-    const newCV = {
-      ...cv,
-      id: undefined,
-      name: `${cv.name} (copie)`,
-      user_id: authUser.id,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
+      const response = await fetch("/api/cv", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCVData),
+      });
 
-    const { data } = await supabase
-      .from("cvs")
-      .insert(newCV)
-      .select()
-      .single();
-
-    if (data) {
-      setCvList([data, ...cvList]);
+      if (response.ok) {
+        const createdCV = await response.json();
+        setCvList([createdCV, ...cvList]);
+        setMenuOpen(null);
+      } else {
+        console.error("Failed to duplicate CV");
+        alert("Erreur lors de la duplication du CV");
+      }
+    } catch (error) {
+      console.error("Error duplicating CV:", error);
+      alert("Erreur lors de la duplication du CV");
     }
-    setMenuOpen(null);
   };
 
+  // Filter relies on cv.name which comes correctly from the API now
   const filteredCVs = cvList.filter((cv) =>
-    cv.name.toLowerCase().includes(searchQuery.toLowerCase())
+    cv.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
