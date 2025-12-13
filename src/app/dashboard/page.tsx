@@ -2,6 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabaseClient";
 import { CVData } from "@/types/cv";
 import {
@@ -9,13 +18,14 @@ import {
   Edit3,
   FileText,
   Loader2,
+  Lock,
   LogOut,
   MoreVertical,
   Plus,
   Search,
   Shield,
   Trash2,
-  User,
+  User
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,6 +39,13 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [isUserAdmin, setIsUserAdmin] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
@@ -72,6 +89,65 @@ export default function DashboardPage() {
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError("");
+    setPasswordLoading(true);
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError("Veuillez remplir tous les champs");
+      setPasswordLoading(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError("Le nouveau mot de passe doit contenir au moins 6 caractères");
+      setPasswordLoading(false);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Les nouveaux mots de passe ne correspondent pas");
+      setPasswordLoading(false);
+      return;
+    }
+
+    try {
+      // Utiliser l'API pour changer le mot de passe (qui vérifie l'ancien mot de passe)
+      const response = await fetch("/api/user/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setPasswordError(data.error || "Erreur lors du changement de mot de passe");
+        setPasswordLoading(false);
+        return;
+      }
+
+      // Succès
+      setPasswordDialogOpen(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setPasswordError("");
+      alert("Mot de passe modifié avec succès !");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setPasswordError("Une erreur est survenue. Veuillez réessayer.");
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -162,15 +238,47 @@ export default function DashboardPage() {
                   </Button>
                 </Link>
               )}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100">
-                <User className="w-4 h-4 text-slate-500" />
-                <span className="text-sm text-slate-700">
-                  {user?.name || user?.email}
-                </span>
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
+                >
+                  <User className="w-4 h-4 text-slate-500" />
+                  <span className="text-sm text-slate-700">
+                    {user?.name || user?.email}
+                  </span>
+                </button>
+                {userMenuOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-20">
+                      <button
+                        className="w-full px-3 py-2 text-sm text-left hover:bg-slate-50 flex items-center gap-2"
+                        onClick={() => {
+                          setPasswordDialogOpen(true);
+                          setUserMenuOpen(false);
+                        }}
+                      >
+                        <Lock className="w-4 h-4" />
+                        Modifier le mot de passe
+                      </button>
+                      <button
+                        className="w-full px-3 py-2 text-sm text-left hover:bg-red-50 text-red-600 flex items-center gap-2"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          handleLogout();
+                        }}
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Déconnexion
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-              <Button variant="ghost" size="icon" onClick={handleLogout}>
-                <LogOut className="w-4 h-4" />
-              </Button>
             </div>
           </div>
         </div>
@@ -332,6 +440,83 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+
+      {/* Dialog pour changer le mot de passe */}
+      <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Modifier le mot de passe</DialogTitle>
+            <DialogDescription>
+              Entrez votre nouveau mot de passe. Il doit contenir au moins 6 caractères.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <Input
+                type="password"
+                label="Ancien mot de passe"
+                placeholder="Ancien mot de passe"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                disabled={passwordLoading}
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                label="Nouveau mot de passe"
+                placeholder="Nouveau mot de passe (min. 6 caractères)"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                disabled={passwordLoading}
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                label="Confirmer le nouveau mot de passe"
+                placeholder="Confirmer le nouveau mot de passe"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={passwordLoading}
+                error={passwordError}
+              />
+            </div>
+            {passwordError && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+                {passwordError}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setPasswordDialogOpen(false);
+                setCurrentPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+                setPasswordError("");
+              }}
+              disabled={passwordLoading}
+            >
+              Annuler
+            </Button>
+            <Button onClick={handleChangePassword} disabled={passwordLoading}>
+              {passwordLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Modification...
+                </>
+              ) : (
+                "Modifier le mot de passe"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
