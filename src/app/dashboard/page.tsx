@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FileText,
-  Plus,
-  Edit3,
-  Copy,
-  Trash2,
-  LogOut,
-  MoreVertical,
-  Search,
-  Loader2,
-  User,
-} from "lucide-react";
 import { createClient } from "@/lib/supabaseClient";
 import { CVData } from "@/types/cv";
+import {
+  Copy,
+  Edit3,
+  FileText,
+  Loader2,
+  LogOut,
+  MoreVertical,
+  Plus,
+  Search,
+  Shield,
+  Trash2,
+  User,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -27,13 +28,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       const supabase = createClient();
-      
+
       const { data: { user: authUser } } = await supabase.auth.getUser();
-      
+
       if (!authUser) {
         router.push("/auth/login");
         return;
@@ -43,6 +45,9 @@ export default function DashboardPage() {
         email: authUser.email || "",
         name: authUser.user_metadata?.full_name,
       });
+
+      // Vérifier si l'utilisateur est admin
+      setIsUserAdmin(authUser.user_metadata?.isAdmin === true);
 
       try {
         const response = await fetch("/api/cv");
@@ -149,6 +154,14 @@ export default function DashboardPage() {
             </Link>
 
             <div className="flex items-center gap-4">
+              {isUserAdmin && (
+                <Link href="/admin">
+                  <Button variant="outline" size="sm">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Administration
+                  </Button>
+                </Link>
+              )}
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100">
                 <User className="w-4 h-4 text-slate-500" />
                 <span className="text-sm text-slate-700">

@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes
-  const protectedPaths = ["/dashboard"];
+  const protectedPaths = ["/dashboard", "/admin"];
   const isProtectedPath = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   );
@@ -47,6 +47,9 @@ export async function middleware(request: NextRequest) {
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
+
+  // Admin routes require admin check (done in the page/API route)
+  // Middleware only checks authentication
 
   // Redirect authenticated users away from auth pages
   const authPaths = ["/auth/login", "/auth/signup"];
