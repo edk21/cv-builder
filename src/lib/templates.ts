@@ -29,6 +29,41 @@ export const templates: Template[] = [
     preview: "/templates/creative.png",
     category: "creative",
   },
+  {
+    id: "tech",
+    name: "Tech",
+    description: "Optimisé pour les développeurs et profils techniques",
+    preview: "/templates/tech.png",
+    category: "modern",
+  },
+  {
+    id: "executive",
+    name: "Executive",
+    description: "Sophistiqué et autoritaire, idéal pour les cadres et dirigeants",
+    preview: "/templates/executive.png",
+    category: "classic",
+  },
+  {
+    id: "compact",
+    name: "Compact",
+    description: "Maximise l'espace pour faire tenir beaucoup d'informations",
+    preview: "/templates/compact.png",
+    category: "minimal",
+  },
+  {
+    id: "bold",
+    name: "Bold",
+    description: "Titres imposants et contrastes forts pour ne pas passer inaperçu",
+    preview: "/templates/bold.png",
+    category: "creative",
+  },
+  {
+    id: "academic",
+    name: "Académique",
+    description: "Structure formelle mettant en avant la formation et la recherche",
+    preview: "/templates/academic.png",
+    category: "classic",
+  },
 ];
 
 export const themeColors = [
@@ -48,4 +83,3 @@ export const themeColors = [
 export function getTemplate(id: string): Template | undefined {
   return templates.find((t) => t.id === id);
 }
-

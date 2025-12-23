@@ -4,13 +4,13 @@ import { formatDate } from "@/lib/utils";
 import { useCVStore } from "@/store/cvStore";
 import { useTranslation } from "@/store/languageStore";
 import {
-  Github,
-  Globe,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+  LuGithub as Github,
+  LuGlobe as Globe,
+  LuLinkedin as Linkedin,
+  LuMail as Mail,
+  LuMapPin as MapPin,
+  LuPhone as Phone,
+} from "react-icons/lu";
 
 export function CVPreview() {
   const { cvData } = useCVStore();
@@ -18,12 +18,18 @@ export function CVPreview() {
   const { personalInfo, experiences, education, skills, projects, languages, certifications } = cvData;
 
   // Template Modern - Design épuré avec une colonne
-  if (cvData.templateId === "modern") {
+  // Also serves as the default fallback
+  const isModern = cvData.templateId === "modern" || !["classic", "minimal", "creative", "tech"].includes(cvData.templateId || "");
+
+  if (isModern) {
     return (
-      <div className="a4-page p-8 text-slate-800 text-sm">
+      <div
+        className="a4-page p-8 text-slate-800 text-sm"
+        style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}
+      >
         {/* Header */}
-        <header className="border-b-2 pb-6 mb-6" style={{ borderColor: cvData.themeColor }}>
-          <h1 className="text-3xl font-bold" style={{ color: cvData.themeColor }}>
+        <header className="border-b-2 pb-6 mb-6 border-[color:var(--theme-color)]">
+          <h1 className="text-3xl font-bold text-[color:var(--theme-color)]">
             {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
           </h1>
           {personalInfo.title && (
@@ -76,7 +82,7 @@ export function CVPreview() {
         {/* Summary */}
         {personalInfo.summary && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-2 text-[color:var(--theme-color)]">
               {t("cv.profile")}
             </h2>
             <p className="text-slate-600 leading-relaxed">{personalInfo.summary}</p>
@@ -86,7 +92,7 @@ export function CVPreview() {
         {/* Experience */}
         {experiences.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
               {t("cv.experience")}
             </h2>
             <div className="space-y-4">
@@ -113,7 +119,7 @@ export function CVPreview() {
         {/* Education */}
         {education.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
               {t("cv.education")}
             </h2>
             <div className="space-y-4">
@@ -140,18 +146,14 @@ export function CVPreview() {
         {/* Skills */}
         {skills.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
               {t("cv.skills")}
             </h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
                 <span
                   key={skill.id}
-                  className="px-3 py-1 rounded-full text-xs"
-                  style={{
-                    backgroundColor: `${cvData.themeColor}15`,
-                    color: cvData.themeColor,
-                  }}
+                  className="px-3 py-1 rounded-full text-xs bg-[color:var(--theme-color)]/10 text-[color:var(--theme-color)]"
                 >
                   {skill.name || t("cv.placeholder.skill")}
                 </span>
@@ -163,7 +165,7 @@ export function CVPreview() {
         {/* Projects */}
         {projects.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
               {t("cv.projects")}
             </h2>
             <div className="space-y-4">
@@ -176,8 +178,7 @@ export function CVPreview() {
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline"
-                        style={{ color: cvData.themeColor }}
+                        className="flex items-center gap-1 text-xs hover:underline text-[color:var(--theme-color)]"
                       >
                         <Globe className="w-3 h-3" />
                         <span>Demo</span>
@@ -188,8 +189,7 @@ export function CVPreview() {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline"
-                        style={{ color: cvData.themeColor }}
+                        className="flex items-center gap-1 text-xs hover:underline text-[color:var(--theme-color)]"
                       >
                         <Github className="w-3 h-3" />
                         <span>GitHub</span>
@@ -213,7 +213,7 @@ export function CVPreview() {
         {/* Languages */}
         {languages.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: cvData.themeColor }}>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
               {t("cv.languages")}
             </h2>
             <div className="flex flex-wrap gap-4">
@@ -226,6 +226,24 @@ export function CVPreview() {
             </div>
           </section>
         )}
+
+        {/* Certifications */}
+        {certifications.length > 0 && (
+          <section>
+            <h2 className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]">
+              {t("cv.certifications")}
+            </h2>
+            <div className="space-y-2">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="text-xs">
+                  <span className="font-semibold">{cert.name}</span>
+                  {cert.issuer && <span className="text-slate-600"> - {cert.issuer}</span>}
+                  {cert.date && <span className="text-slate-500 float-right">{formatDate(cert.date)}</span>}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     );
   }
@@ -233,7 +251,10 @@ export function CVPreview() {
   // Template Minimal - Design minimaliste avec beaucoup d'espace blanc
   if (cvData.templateId === "minimal") {
     return (
-      <div className="a4-page p-12 text-slate-900 text-sm">
+      <div
+        className="a4-page p-12 text-slate-900 text-sm"
+        style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}
+      >
         {/* Header - Centré et épuré */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-light tracking-wide mb-2">
@@ -391,6 +412,26 @@ export function CVPreview() {
             </div>
           </section>
         )}
+
+        {/* Certifications */}
+        {certifications.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xs font-normal uppercase tracking-widest mb-6 text-slate-400 border-b border-slate-200 pb-2">
+              {t("cv.certifications")}
+            </h2>
+            <div className="space-y-4">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="flex justify-between gap-4 text-xs">
+                  <div>
+                    <span className="font-medium text-slate-700">{cert.name}</span>
+                    {cert.issuer && <span className="text-slate-500 block">{cert.issuer}</span>}
+                  </div>
+                  {cert.date && <span className="text-slate-400 font-light">{formatDate(cert.date)}</span>}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     );
   }
@@ -398,11 +439,13 @@ export function CVPreview() {
   // Template Classic - Design classique avec sidebar colorée
   if (cvData.templateId === "classic") {
     return (
-      <div className="a4-page flex text-slate-800 text-sm">
+      <div
+        className="a4-page flex text-slate-800 text-sm"
+        style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}
+      >
         {/* Left Sidebar */}
         <div
-          className="w-1/3 p-6 text-white"
-          style={{ backgroundColor: cvData.themeColor }}
+          className="w-1/3 p-6 text-white bg-[color:var(--theme-color)]"
         >
           {/* Name */}
           <div className="mb-8">
@@ -511,6 +554,25 @@ export function CVPreview() {
               </div>
             </div>
           )}
+
+          {/* Certifications */}
+          {certifications.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xs font-bold uppercase tracking-wider mb-3 opacity-75">
+                {t("cv.certifications")}
+              </h2>
+              <div className="space-y-3 text-xs">
+                {certifications.map((cert) => (
+                  <div key={cert.id}>
+                    <div className="font-medium">{cert.name}</div>
+                    <div className="opacity-75 text-[10px] mt-0.5">
+                      {cert.issuer} {cert.date && `• ${formatDate(cert.date)}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Content */}
@@ -519,8 +581,7 @@ export function CVPreview() {
           {personalInfo.summary && (
             <section className="mb-6">
               <h2
-                className="text-sm font-bold uppercase tracking-wider mb-2"
-                style={{ color: cvData.themeColor }}
+                className="text-sm font-bold uppercase tracking-wider mb-2 text-[color:var(--theme-color)]"
               >
                 {t("cv.profile")}
               </h2>
@@ -534,15 +595,14 @@ export function CVPreview() {
           {experiences.length > 0 && (
             <section className="mb-6">
               <h2
-                className="text-sm font-bold uppercase tracking-wider mb-3"
-                style={{ color: cvData.themeColor }}
+                className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]"
               >
                 {t("cv.experience")}
               </h2>
               <div className="space-y-4">
                 {experiences.map((exp) => (
-                  <div key={exp.id} className="relative pl-4 border-l-2" style={{ borderColor: cvData.themeColor }}>
-                    <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                  <div key={exp.id} className="relative pl-4 border-l-2 border-[color:var(--theme-color)]">
+                    <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-[color:var(--theme-color)]" />
                     <div className="text-xs text-slate-500 mb-1">
                       {formatDate(exp.startDate)} - {exp.current ? t("cv.present") : formatDate(exp.endDate)}
                     </div>
@@ -563,15 +623,14 @@ export function CVPreview() {
           {education.length > 0 && (
             <section className="mb-6">
               <h2
-                className="text-sm font-bold uppercase tracking-wider mb-3"
-                style={{ color: cvData.themeColor }}
+                className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]"
               >
                 {t("cv.education")}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
-                  <div key={edu.id} className="relative pl-4 border-l-2" style={{ borderColor: cvData.themeColor }}>
-                    <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                  <div key={edu.id} className="relative pl-4 border-l-2 border-[color:var(--theme-color)]">
+                    <div className="absolute -left-1.5 top-0 w-3 h-3 rounded-full bg-[color:var(--theme-color)]" />
                     <div className="text-xs text-slate-500 mb-1">
                       {formatDate(edu.startDate)} - {edu.current ? t("cv.present") : formatDate(edu.endDate)}
                     </div>
@@ -589,8 +648,7 @@ export function CVPreview() {
           {projects.length > 0 && (
             <section>
               <h2
-                className="text-sm font-bold uppercase tracking-wider mb-3"
-                style={{ color: cvData.themeColor }}
+                className="text-sm font-bold uppercase tracking-wider mb-3 text-[color:var(--theme-color)]"
               >
                 {t("cv.projects")}
               </h2>
@@ -604,8 +662,8 @@ export function CVPreview() {
                           href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs hover:underline"
-                          style={{ color: cvData.themeColor }}
+                          className="flex items-center gap-1 text-xs hover:underline text-[color:var(--theme-color)]"
+                          aria-label={`Demo of ${project.name}`}
                         >
                           <Globe className="w-3 h-3" />
                           <span>Demo</span>
@@ -616,8 +674,8 @@ export function CVPreview() {
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs hover:underline"
-                          style={{ color: cvData.themeColor }}
+                          className="flex items-center gap-1 text-xs hover:underline text-[color:var(--theme-color)]"
+                          aria-label={`GitHub repository of ${project.name}`}
                         >
                           <Github className="w-3 h-3" />
                           <span>GitHub</span>
@@ -632,11 +690,7 @@ export function CVPreview() {
                         {project.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="px-2 py-0.5 rounded text-xs"
-                            style={{
-                              backgroundColor: `${cvData.themeColor}15`,
-                              color: cvData.themeColor,
-                            }}
+                            className="px-2 py-0.5 rounded text-xs bg-[color:var(--theme-color)]/10 text-[color:var(--theme-color)]"
                           >
                             {tech}
                           </span>
@@ -656,25 +710,26 @@ export function CVPreview() {
   // Template Creative - Design créatif et audacieux
   if (cvData.templateId === "creative") {
     return (
-      <div className="a4-page p-6 text-slate-800 text-sm relative overflow-hidden">
+      <div
+        className="a4-page p-6 text-slate-800 text-sm relative overflow-hidden"
+        style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}
+      >
         {/* Background accent */}
         <div
-          className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-3xl"
-          style={{ backgroundColor: cvData.themeColor }}
+          className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-3xl bg-[color:var(--theme-color)]"
         />
         <div
-          className="absolute bottom-0 left-0 w-24 h-24 opacity-10 rounded-full blur-2xl"
-          style={{ backgroundColor: cvData.themeColor }}
+          className="absolute bottom-0 left-0 w-24 h-24 opacity-10 rounded-full blur-2xl bg-[color:var(--theme-color)]"
         />
 
         {/* Header with creative layout */}
-        <header className="relative mb-8 pb-6 border-b-4" style={{ borderColor: cvData.themeColor }}>
+        <header className="relative mb-8 pb-6 border-b-4 border-[color:var(--theme-color)]">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold mb-2" style={{ color: cvData.themeColor }}>
+              <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
                 {personalInfo.firstName || t("cv.placeholder.firstName")}
               </h1>
-              <h1 className="text-4xl font-bold mb-2" style={{ color: cvData.themeColor }}>
+              <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
                 {personalInfo.lastName || t("cv.placeholder.lastName")}
               </h1>
               {personalInfo.title && (
@@ -682,23 +737,23 @@ export function CVPreview() {
               )}
             </div>
             {/* Contact in a box */}
-            <div className="bg-slate-50 p-4 rounded-lg border-2" style={{ borderColor: cvData.themeColor }}>
+            <div className="bg-slate-50 p-4 rounded-lg border-2 border-[color:var(--theme-color)]">
               <div className="space-y-2 text-xs">
                 {personalInfo.email && (
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" style={{ color: cvData.themeColor }} />
+                    <Mail className="w-4 h-4 text-[color:var(--theme-color)]" />
                     <span className="text-slate-700">{personalInfo.email}</span>
                   </div>
                 )}
                 {personalInfo.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" style={{ color: cvData.themeColor }} />
+                    <Phone className="w-4 h-4 text-[color:var(--theme-color)]" />
                     <span className="text-slate-700">{personalInfo.phone}</span>
                   </div>
                 )}
                 {(personalInfo.city || personalInfo.country) && (
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" style={{ color: cvData.themeColor }} />
+                    <MapPin className="w-4 h-4 text-[color:var(--theme-color)]" />
                     <span className="text-slate-700">
                       {[personalInfo.city, personalInfo.country].filter(Boolean).join(", ")}
                     </span>
@@ -716,7 +771,7 @@ export function CVPreview() {
             {/* Summary */}
             {personalInfo.summary && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.profile")}
                 </h2>
                 <p className="text-slate-600 text-xs leading-relaxed">{personalInfo.summary}</p>
@@ -726,13 +781,13 @@ export function CVPreview() {
             {/* Experience */}
             {experiences.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.experience")}
                 </h2>
                 <div className="space-y-4">
                   {experiences.map((exp) => (
                     <div key={exp.id} className="relative pl-6">
-                      <div className="absolute left-0 top-1 w-2 h-2 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                      <div className="absolute left-0 top-1 w-2 h-2 rounded-full bg-[color:var(--theme-color)]" />
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <h3 className="font-bold text-sm">{exp.position || t("cv.placeholder.position")}</h3>
@@ -754,13 +809,13 @@ export function CVPreview() {
             {/* Education */}
             {education.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.education")}
                 </h2>
                 <div className="space-y-4">
                   {education.map((edu) => (
                     <div key={edu.id} className="relative pl-6">
-                      <div className="absolute left-0 top-1 w-2 h-2 rounded-full" style={{ backgroundColor: cvData.themeColor }} />
+                      <div className="absolute left-0 top-1 w-2 h-2 rounded-full bg-[color:var(--theme-color)]" />
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <h3 className="font-bold text-sm">{edu.degree} {edu.field && `- ${edu.field}`}</h3>
@@ -782,7 +837,7 @@ export function CVPreview() {
             {/* Skills */}
             {skills.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.skills")}
                 </h2>
                 <div className="space-y-2">
@@ -794,7 +849,7 @@ export function CVPreview() {
                       </div>
                       <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                         <div
-                          className="h-full rounded-full"
+                          className="h-full rounded-full bg-[color:var(--theme-color)]"
                           style={{
                             width:
                               skill.level === "expert"
@@ -804,7 +859,6 @@ export function CVPreview() {
                                   : skill.level === "intermediaire"
                                     ? "60%"
                                     : "40%",
-                            backgroundColor: cvData.themeColor,
                           }}
                         />
                       </div>
@@ -817,12 +871,12 @@ export function CVPreview() {
             {/* Projects */}
             {projects.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.projects")}
                 </h2>
                 <div className="space-y-3">
                   {projects.map((project) => (
-                    <div key={project.id} className="p-3 rounded-lg border-2" style={{ borderColor: cvData.themeColor }}>
+                    <div key={project.id} className="p-3 rounded-lg border-2 border-[color:var(--theme-color)]">
                       <h3 className="font-bold text-sm mb-1">{project.name || t("cv.placeholder.project")}</h3>
                       {project.description && (
                         <p className="text-slate-600 text-xs mt-1">{project.description}</p>
@@ -832,12 +886,7 @@ export function CVPreview() {
                           {project.technologies.map((tech, i) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 rounded text-xs"
-                              style={{
-                                backgroundColor: `${cvData.themeColor}20`,
-                                color: cvData.themeColor,
-                                fontWeight: "600",
-                              }}
+                              className="px-2 py-0.5 rounded text-xs bg-[color:var(--theme-color)]/20 text-[color:var(--theme-color)] font-semibold"
                             >
                               {tech}
                             </span>
@@ -853,14 +902,34 @@ export function CVPreview() {
             {/* Languages */}
             {languages.length > 0 && (
               <section>
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded" style={{ backgroundColor: cvData.themeColor, color: "white" }}>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
                   {t("cv.languages")}
                 </h2>
                 <div className="space-y-2">
                   {languages.map((lang) => (
-                    <div key={lang.id} className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: `${cvData.themeColor}10` }}>
+                    <div key={lang.id} className="flex justify-between items-center p-2 rounded bg-[color:var(--theme-color)]/10">
                       <span className="text-xs font-medium">{lang.name || t("cv.placeholder.language")}</span>
-                      <span className="text-xs font-bold" style={{ color: cvData.themeColor }}>{lang.level}</span>
+                      <span className="text-xs font-bold text-[color:var(--theme-color)]">{lang.level}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Certifications */}
+            {certifications.length > 0 && (
+              <section>
+                <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-3 py-1 rounded bg-[color:var(--theme-color)] text-white">
+                  {t("cv.certifications")}
+                </h2>
+                <div className="space-y-3">
+                  {certifications.map((cert) => (
+                    <div key={cert.id} className="p-2 border-l-2 border-[color:var(--theme-color)]">
+                      <div className="flex justify-between items-start">
+                        <span className="text-xs font-bold text-slate-700 block">{cert.name}</span>
+                        {cert.date && <span className="text-[10px] text-slate-500">{formatDate(cert.date)}</span>}
+                      </div>
+                      {cert.issuer && <span className="text-xs text-slate-600">{cert.issuer}</span>}
                     </div>
                   ))}
                 </div>
@@ -873,5 +942,288 @@ export function CVPreview() {
   }
 
   // Fallback to Modern
+  // Template Tech - Design technique et structuré
+  if (cvData.templateId === "tech") {
+    return (
+      <div
+        className="a4-page p-8 text-slate-800 text-sm font-sans bg-slate-50"
+        style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}
+      >
+        {/* Header style terminal */}
+        <header className="bg-slate-900 text-white p-6 rounded-lg mb-8 shadow-sm">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1
+                className="text-3xl font-mono font-bold mb-2"
+                style={{ color: "#4ade80" }} // keeping the terminal green if requested, or use theme color
+              >
+                {">"} {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
+                <span className="animate-pulse">_</span>
+              </h1>
+              {personalInfo.title && (
+                <p className="text-lg text-slate-400 font-mono">{personalInfo.title}</p>
+              )}
+            </div>
+            
+            <div className="text-right text-xs font-mono text-slate-400 space-y-1">
+              {personalInfo.email && (
+                <div className="flex items-center justify-end gap-2">
+                  <span>{personalInfo.email}</span>
+                  <Mail className="w-3 h-3" />
+                </div>
+              )}
+              {personalInfo.phone && (
+                <div className="flex items-center justify-end gap-2">
+                  <span>{personalInfo.phone}</span>
+                  <Phone className="w-3 h-3" />
+                </div>
+              )}
+              {(personalInfo.city || personalInfo.country) && (
+                <div className="flex items-center justify-end gap-2">
+                  <span>{[personalInfo.city, personalInfo.country].filter(Boolean).join(", ")}</span>
+                  <MapPin className="w-3 h-3" />
+                </div>
+              )}
+              {personalInfo.website && (
+                <div className="flex items-center justify-end gap-2">
+                  <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="Portfolio">Portfolio</a>
+                  <Globe className="w-3 h-3" />
+                </div>
+              )}
+              {personalInfo.github && (
+                <div className="flex items-center justify-end gap-2">
+                  <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="GitHub">GitHub</a>
+                  <Github className="w-3 h-3" />
+                </div>
+              )}
+              {personalInfo.linkedin && (
+                <div className="flex items-center justify-end gap-2">
+                  <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="LinkedIn">LinkedIn</a>
+                  <Linkedin className="w-3 h-3" />
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-12 gap-6">
+          {/* Main Column */}
+          <div className="col-span-8 space-y-8">
+            {/* Experience */}
+            {experiences.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4 border-b-2 border-slate-200 pb-2">
+                   <span className="text-xl font-bold font-mono text-[color:var(--theme-color)]">#</span>
+                   <h2 className="text-lg font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.experience")}
+                  </h2>
+                </div>
+                
+                <div className="space-y-6">
+                  {experiences.map((exp) => (
+                    <div key={exp.id} className="relative pl-4 border-l-2 border-slate-200 hover:border-slate-400 transition-colors">
+                      <div className="flex justify-between items-baseline mb-1">
+                        <h3 className="font-bold text-base text-slate-900">
+                          {exp.position || t("cv.placeholder.position")}
+                        </h3>
+                        <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                          {formatDate(exp.startDate)} - {exp.current ? t("cv.present") : formatDate(exp.endDate)}
+                        </span>
+                      </div>
+                      <div className="text-sm font-semibold mb-2 text-[color:var(--theme-color)]">
+                        @{exp.company}
+                      </div>
+                      {exp.description && (
+                        <p className="text-slate-600 text-sm leading-relaxed">{exp.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Projects */}
+            {projects.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4 border-b-2 border-slate-200 pb-2">
+                   <span className="text-xl font-bold font-mono text-[color:var(--theme-color)]">#</span>
+                   <h2 className="text-lg font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.projects")}
+                  </h2>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-4">
+                  {projects.map((project) => (
+                    <div key={project.id} className="bg-white p-4 rounded border border-slate-200 shadow-sm">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-slate-900">{project.name || t("cv.placeholder.project")}</h3>
+                        <div className="flex gap-2">
+                          {project.url && (
+                             <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-800">
+                               <Globe className="w-4 h-4" />
+                             </a>
+                          )}
+                          {project.github && (
+                             <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-800">
+                               <Github className="w-4 h-4" />
+                             </a>
+                          )}
+                        </div>
+                      </div>
+                      {project.description && (
+                        <p className="text-slate-600 text-xs mb-3">{project.description}</p>
+                      )}
+                      {project.technologies.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {project.technologies.map((tech, i) => (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 rounded text-[10px] font-mono border border-[color:var(--theme-color)]/25 text-[color:var(--theme-color)] bg-[color:var(--theme-color)]/5"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="col-span-4 space-y-8">
+             {/* Summary */}
+             {personalInfo.summary && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                   <span className="text-lg font-bold font-mono text-[color:var(--theme-color)]">//</span>
+                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.profile")}
+                  </h2>
+                </div>
+                <p className="text-slate-600 text-xs leading-relaxed font-mono bg-slate-100 p-3 rounded">
+                  {personalInfo.summary}
+                </p>
+              </section>
+            )}
+
+            {/* Skills */}
+            {skills.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                   <span className="text-lg font-bold font-mono text-[color:var(--theme-color)]">//</span>
+                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.skills")}
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  {skills.map((skill) => (
+                    <div key={skill.id}>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold text-slate-700">{skill.name || t("cv.placeholder.skill")}</span>
+                      </div>
+                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-[color:var(--theme-color)]"
+                          style={{
+                            width:
+                              skill.level === "expert"
+                                ? "100%"
+                                : skill.level === "avance"
+                                  ? "80%"
+                                  : skill.level === "intermediaire"
+                                    ? "60%"
+                                    : "40%",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Education */}
+            {education.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                   <span className="text-lg font-bold font-mono text-[color:var(--theme-color)]">//</span>
+                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.education")}
+                  </h2>
+                </div>
+                <div className="space-y-4">
+                  {education.map((edu) => (
+                    <div key={edu.id}>
+                      <h3 className="font-bold text-sm text-slate-900 border-l-2 pl-2 border-[color:var(--theme-color)]">
+                        {edu.degree}
+                      </h3>
+                      <div className="text-xs text-slate-600 pl-2.5 mt-1">
+                        {edu.field}
+                      </div>
+                      <div className="text-xs text-slate-500 pl-2.5 mt-0.5 font-mono">
+                        {edu.institution}
+                      </div>
+                      <div className="text-[10px] text-slate-400 pl-2.5 mt-0.5">
+                        {formatDate(edu.startDate)} - {edu.current ? t("cv.present") : formatDate(edu.endDate)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Languages */}
+            {languages.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                   <span className="text-lg font-bold font-mono text-[color:var(--theme-color)]">//</span>
+                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.languages")}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {languages.map((lang) => (
+                    <div key={lang.id} className="flex items-center justify-between text-xs border border-slate-200 p-2 rounded bg-white">
+                      <span className="font-medium">{lang.name}</span>
+                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded text-white bg-[color:var(--theme-color)]">
+                        {lang.level}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Certifications */}
+            {certifications.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-3">
+                   <span className="text-lg font-bold font-mono text-[color:var(--theme-color)]">//</span>
+                   <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    {t("cv.certifications")}
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  {certifications.map((cert) => (
+                    <div key={cert.id} className="font-mono text-xs">
+                      <div className="text-green-600 font-bold">{cert.name}</div>
+                      <div className="text-slate-500 text-[10px]">
+                        {cert.issuer} {cert.date && <span className="text-slate-400">[{formatDate(cert.date)}]</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback to Modern if nothing matched (handled by the first if block)
   return null;
 }

@@ -11,16 +11,17 @@ import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TagsInput } from "@/components/ui/tags-input";
 import {
-  User,
-  Briefcase,
-  GraduationCap,
-  Lightbulb,
-  FolderKanban,
-  Languages,
-  Plus,
-  Trash2,
-  GripVertical,
-} from "lucide-react";
+  LuUser as User,
+  LuBriefcase as Briefcase,
+  LuGraduationCap as GraduationCap,
+  LuLightbulb as Lightbulb,
+  LuFolderKanban as FolderKanban,
+  LuLanguages as Languages,
+  LuPlus as Plus,
+  LuTrash2 as Trash2,
+  LuGripVertical as GripVertical,
+  LuAward as Award,
+} from "react-icons/lu";
 
 export function CVEditor() {
   const { t } = useTranslation();
@@ -44,6 +45,9 @@ export function CVEditor() {
     addLanguage,
     updateLanguage,
     removeLanguage,
+    addCertification,
+    updateCertification,
+    removeCertification,
   } = useCVStore();
 
   const skillLevelOptions = [
@@ -91,6 +95,10 @@ export function CVEditor() {
             <TabsTrigger value="languages" className="gap-1.5">
               <Languages className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">{t("editor.tab.languages")}</span>
+            </TabsTrigger>
+            <TabsTrigger value="certifications" className="gap-1.5">
+              <Award className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{t("editor.tab.certifications")}</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -573,6 +581,60 @@ export function CVEditor() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Certifications Tab */}
+          <TabsContent value="certifications" className="mt-0 space-y-4">
+            {cvData.certifications.map((cert, index) => (
+              <Card key={cert.id} className="relative group">
+                <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                  <CardTitle className="text-base">{t("editor.certifications.title")} {index + 1}</CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                    onClick={() => removeCertification(cert.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Input
+                    label={t("editor.certifications.name")}
+                    placeholder="AWS Certified Solutions Architect"
+                    value={cert.name}
+                    onChange={(e) =>
+                      updateCertification(cert.id, { name: e.target.value })
+                    }
+                  />
+                  <Input
+                    label={t("editor.certifications.issuer")}
+                    placeholder="Amazon Web Services"
+                    value={cert.issuer}
+                    onChange={(e) =>
+                      updateCertification(cert.id, { issuer: e.target.value })
+                    }
+                  />
+                  <Input
+                    label={t("editor.certifications.date")}
+                    type="month"
+                    value={cert.date}
+                    onChange={(e) =>
+                      updateCertification(cert.id, { date: e.target.value })
+                    }
+                  />
+                </CardContent>
+              </Card>
+            ))}
+
+            <Button
+              variant="outline"
+              className="w-full border-dashed"
+              onClick={addCertification}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {t("editor.certifications.add")}
+            </Button>
           </TabsContent>
         </div>
       </Tabs>

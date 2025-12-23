@@ -14,21 +14,21 @@ import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabaseClient";
 import { CVData } from "@/types/cv";
 import {
-  Copy,
-  Crown,
-  Edit3,
-  FileText,
-  Loader2,
-  Lock,
-  LogOut,
-  MoreVertical,
-  Plus,
-  Search,
-  Shield,
-  Sparkles,
-  Trash2,
-  User
-} from "lucide-react";
+  LuCopy as Copy,
+  LuCrown as Crown,
+  LuPen as Edit3,
+  LuFileText as FileText,
+  LuLoader as Loader2,
+  LuLock as Lock,
+  LuLogOut as LogOut,
+  LuPlus as Plus,
+  LuSearch as Search,
+  LuShield as Shield,
+  LuSparkles as Sparkles,
+  LuTrash2 as Trash2,
+  LuUser as User
+} from "react-icons/lu";
+import { FiMoreVertical as MoreVertical } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

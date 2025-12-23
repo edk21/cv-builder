@@ -6,22 +6,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabaseClient";
 import {
-  ArrowLeft,
-  Calendar,
-  Crown,
-  FileCheck,
-  FileText,
-  Loader2,
-  LogOut,
-  Mail,
-  RefreshCw,
-  Search,
-  Shield,
-  ShieldCheck,
-  ShieldX,
-  User,
-  Users,
-} from "lucide-react";
+  LuArrowLeft as ArrowLeft,
+  LuCalendar as Calendar,
+  LuCrown as Crown,
+  LuFileCheck as FileCheck,
+  LuFileText as FileText,
+  LuLoader as Loader2,
+  LuLogOut as LogOut,
+  LuMail as Mail,
+  LuRefreshCw as RefreshCw,
+  LuSearch as Search,
+  LuShield as Shield,
+  LuShieldCheck as ShieldCheck,
+  LuShieldBan as ShieldX,
+  LuUser as User,
+  LuUsers as Users,
+} from "react-icons/lu";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

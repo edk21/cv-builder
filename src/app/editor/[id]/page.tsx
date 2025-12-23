@@ -22,19 +22,19 @@ import { createClient } from "@/lib/supabaseClient";
 import { defaultCVData } from "@/types/cv";
 import { translations } from "@/lib/i18n/translations";
 import {
-  AlertCircle,
-  ArrowLeft,
-  Check,
-  Download,
-  Eye,
-  FileText,
-  Loader2,
-  Lock,
-  Save,
-  User,
-  ZoomIn,
-  ZoomOut,
-} from "lucide-react";
+  LuCircleAlert as AlertCircle,
+  LuArrowLeft as ArrowLeft,
+  LuCheck as Check,
+  LuDownload as Download,
+  LuEye as Eye,
+  LuFileText as FileText,
+  LuLoader as Loader2,
+  LuLock as Lock,
+  LuSave as Save,
+  LuUser as User,
+  LuZoomIn as ZoomIn,
+  LuZoomOut as ZoomOut,
+} from "react-icons/lu";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradeModal } from "@/components/UpgradeModal";
 
@@ -216,7 +216,7 @@ export default function EditorPage({ params }: PageProps) {
         });
 
         if (response.ok) {
-          const savedCV = await response.json();
+          await response.json();
           setSaving(false);
           setSaved(true);
           setDirty(false);

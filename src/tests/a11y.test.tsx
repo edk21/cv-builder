@@ -1,10 +1,11 @@
 import React from 'react'
-import { render, act } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
-import Home from '../app/page'
-import { Button } from '../components/ui/button'
-import { Input } from '../components/ui/input'
-import { Checkbox } from '../components/ui/checkbox'
+import 'jest-axe/extend-expect'
+import Home from '@/app/page'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
 
 expect.extend(toHaveNoViolations)
 

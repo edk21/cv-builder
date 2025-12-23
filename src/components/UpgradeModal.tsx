@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check, Sparkles, Zap } from "lucide-react";
+import { LuCheck as Check, LuSparkles as Sparkles, LuZap as Zap } from "react-icons/lu";
 
 interface UpgradeModalProps {
   open: boolean;

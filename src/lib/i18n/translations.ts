@@ -17,6 +17,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.signup": "S'inscrire",
     "nav.logout": "Déconnexion",
     "nav.dashboard": "Tableau de bord",
+    "nav.home": "Accueil",
+    "nav.templates": "Templates",
 
     // Landing Page
     "landing.badge": "Nouveau : Templates créatifs disponibles",
@@ -133,6 +135,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.tab.skills": "Compétences",
     "editor.tab.projects": "Projets",
     "editor.tab.languages": "Langues",
+    "editor.tab.certifications": "Certifications",
 
     // Personal Info
     "editor.personal.title": "Informations personnelles",
@@ -206,16 +209,35 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.languages.level": "Niveau",
     "editor.languages.native": "Natif",
 
+    // Certifications
+    "editor.certifications.title": "Certifications",
+    "editor.certifications.add": "Ajouter une certification",
+    "editor.certifications.name": "Nom de la certification",
+    "editor.certifications.issuer": "Organisme émetteur",
+    "editor.certifications.date": "Date d'obtention",
+
     // Template Dialog
     "template.choose": "Choisir un template",
     "template.modern": "Modern",
     "template.modernDesc": "Un design épuré et contemporain avec une mise en page à deux colonnes",
+    "template.elegant": "Élégant",
+    "template.elegantDesc": "Design bicolonne sophistiqué avec en-tête coloré et mise en page aérée",
     "template.classic": "Classique",
     "template.classicDesc": "Un style traditionnel et professionnel, parfait pour les secteurs conservateurs",
     "template.minimal": "Minimaliste",
     "template.minimalDesc": "Un design simple et élégant qui met l'accent sur le contenu",
     "template.creative": "Créatif",
     "template.creativeDesc": "Un style audacieux et original pour les profils créatifs",
+    "template.professional": "Professionnel",
+    "template.professionalDesc": "Format une colonne optimisé ATS, sobre et efficace pour tous les secteurs",
+    "template.executive": "Executive",
+    "template.executiveDesc": "Design élégant pour cadres et dirigeants avec hiérarchie visuelle forte",
+    "template.compact": "Compact",
+    "template.compactDesc": "Layout dense mais lisible, idéal pour présenter beaucoup d'expérience",
+    "template.tech": "Tech",
+    "template.techDesc": "Optimisé pour les profils IT/développeurs avec section compétences mise en avant",
+    "template.academic": "Académique",
+    "template.academicDesc": "Pour chercheurs et profils académiques avec emphase sur publications et éducation",
 
     // Color Dialog
     "color.choose": "Couleur du thème",
@@ -235,12 +257,29 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.placeholder.skill": "Compétence",
     "cv.placeholder.project": "Projet",
     "cv.placeholder.language": "Langue",
+    "cv.certifications": "Certifications",
 
     // Common
     "common.or": "ou",
     "common.loading": "Chargement...",
     "common.error": "Une erreur est survenue. Veuillez réessayer.",
     "common.back": "Retour",
+
+    // Templates Page
+    "templates.title": "Découvrez nos",
+    "templates.titleHighlight": "templates professionnels",
+    "templates.subtitle": "Choisissez parmi 9 templates soigneusement conçus pour mettre en valeur votre parcours professionnel",
+    "templates.category.all": "Tous",
+    "templates.category.modern": "Moderne",
+    "templates.category.classic": "Classique",
+    "templates.category.creative": "Créatif",
+    "templates.category.professional": "Professionnel",
+    "templates.useTemplate": "Utiliser ce template",
+    "templates.feature.ats": "Compatible ATS",
+    "templates.feature.customizable": "Personnalisable",
+    "templates.cta.title": "Prêt à créer votre CV professionnel ?",
+    "templates.cta.subtitle": "Choisissez votre template préféré et commencez à créer votre CV en quelques minutes",
+    "templates.cta.button": "Créer mon CV maintenant",
   },
 
   en: {
@@ -251,6 +290,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.signup": "Sign up",
     "nav.logout": "Logout",
     "nav.dashboard": "Dashboard",
+    "nav.home": "Home",
+    "nav.templates": "Templates",
 
     // Landing Page
     "landing.badge": "New: Creative templates available",
@@ -367,6 +408,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.tab.skills": "Skills",
     "editor.tab.projects": "Projects",
     "editor.tab.languages": "Languages",
+    "editor.tab.certifications": "Certifications",
 
     // Personal Info
     "editor.personal.title": "Personal Information",
@@ -440,16 +482,35 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.languages.level": "Level",
     "editor.languages.native": "Native",
 
+    // Certifications
+    "editor.certifications.title": "Certifications",
+    "editor.certifications.add": "Add certification",
+    "editor.certifications.name": "Certification name",
+    "editor.certifications.issuer": "Issuing organization",
+    "editor.certifications.date": "Date earned",
+
     // Template Dialog
     "template.choose": "Choose a template",
     "template.modern": "Modern",
     "template.modernDesc": "A clean and contemporary design with a two-column layout",
+    "template.elegant": "Elegant",
+    "template.elegantDesc": "Sophisticated two-column design with colored header and airy layout",
     "template.classic": "Classic",
     "template.classicDesc": "A traditional and professional style, perfect for conservative industries",
     "template.minimal": "Minimal",
     "template.minimalDesc": "A simple and elegant design that emphasizes content",
     "template.creative": "Creative",
     "template.creativeDesc": "A bold and original style for creative profiles",
+    "template.professional": "Professional",
+    "template.professionalDesc": "ATS-optimized single column format, clean and effective for all industries",
+    "template.executive": "Executive",
+    "template.executiveDesc": "Elegant design for executives and leaders with strong visual hierarchy",
+    "template.compact": "Compact",
+    "template.compactDesc": "Dense but readable layout, ideal for showcasing extensive experience",
+    "template.tech": "Tech",
+    "template.techDesc": "Optimized for IT/developer profiles with highlighted skills section",
+    "template.academic": "Academic",
+    "template.academicDesc": "For researchers and academic profiles with emphasis on publications and education",
 
     // Color Dialog
     "color.choose": "Theme Color",
@@ -469,6 +530,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "cv.placeholder.skill": "Skill",
     "cv.placeholder.project": "Project",
     "cv.placeholder.language": "Language",
+    "cv.certifications": "Certifications",
 
     // Common
     "common.or": "or",
@@ -684,6 +746,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.minimalDesc": "Un diseño simple y elegante que enfatiza el contenido",
     "template.creative": "Creativo",
     "template.creativeDesc": "Un estilo audaz y original para perfiles creativos",
+    "template.professional": "Profesional",
+    "template.professionalDesc": "Formato de una columna optimizado para ATS, limpio y eficaz para todos los sectores",
+    "template.executive": "Ejecutivo",
+    "template.executiveDesc": "Diseño elegante para ejecutivos y líderes con jerarquía visual fuerte",
+    "template.compact": "Compacto",
+    "template.compactDesc": "Diseño denso pero legible, ideal para mostrar mucha experiencia",
+    "template.tech": "Tech",
+    "template.techDesc": "Optimizado para perfiles IT/desarrolladores con sección de habilidades destacada",
+    "template.academic": "Académico",
+    "template.academicDesc": "Para investigadores y perfiles académicos con énfasis en publicaciones y educación",
 
     // Color Dialog
     "color.choose": "Color del tema",
@@ -927,6 +999,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.minimalDesc": "Ein einfaches und elegantes Design, das den Inhalt betont",
     "template.creative": "Kreativ",
     "template.creativeDesc": "Ein mutiger und origineller Stil für kreative Profile",
+    "template.professional": "Professionell",
+    "template.professionalDesc": "ATS-optimiertes einspaltiges Format, sauber und effektiv für alle Branchen",
+    "template.executive": "Executive",
+    "template.executiveDesc": "Elegantes Design für Führungskräfte mit starker visueller Hierarchie",
+    "template.compact": "Kompakt",
+    "template.compactDesc": "Dichtes aber lesbares Layout, ideal um umfangreiche Erfahrung darzustellen",
+    "template.tech": "Tech",
+    "template.techDesc": "Optimiert für IT/Entwickler-Profile mit hervorgehobener Fähigkeiten-Sektion",
+    "template.academic": "Akademisch",
+    "template.academicDesc": "Für Forscher und akademische Profile mit Schwerpunkt auf Publikationen und Ausbildung",
 
     "color.choose": "Themenfarbe",
 
@@ -1142,6 +1224,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.minimalDesc": "Een eenvoudig en elegant ontwerp dat de nadruk legt op inhoud",
     "template.creative": "Creatief",
     "template.creativeDesc": "Een gedurfde en originele stijl voor creatieve profielen",
+    "template.professional": "Professioneel",
+    "template.professionalDesc": "ATS-geoptimaliseerd enkel-kolom formaat, schoon en effectief voor alle sectoren",
+    "template.executive": "Executive",
+    "template.executiveDesc": "Elegant ontwerp voor leidinggevenden met sterke visuele hiërarchie",
+    "template.compact": "Compact",
+    "template.compactDesc": "Dichte maar leesbare layout, ideaal voor het tonen van uitgebreide ervaring",
+    "template.tech": "Tech",
+    "template.techDesc": "Geoptimaliseerd voor IT/ontwikkelaar profielen met uitgelichte vaardigheden sectie",
+    "template.academic": "Academisch",
+    "template.academicDesc": "Voor onderzoekers en academische profielen met nadruk op publicaties en opleiding",
 
     // Color Dialog
     "color.choose": "Themakleur",

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useLanguageStore } from "@/store/languageStore";
 import { languages } from "@/lib/i18n/translations";
 import { cn } from "@/lib/utils";
-import { Globe, Check, ChevronDown } from "lucide-react";
+import { LuGlobe as Globe, LuCheck as Check, LuChevronDown as ChevronDown } from "react-icons/lu";
 
 interface LanguageSwitcherProps {
   variant?: "dropdown" | "inline";

@@ -7,16 +7,16 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslation } from "@/store/languageStore";
 import { createClient } from "@/lib/supabaseClient";
 import {
-  FileText,
-  Sparkles,
-  Download,
-  Layout,
-  Palette,
-  Shield,
-  ArrowRight,
-  Check,
-  User,
-} from "lucide-react";
+  LuFileText as FileText,
+  LuSparkles as Sparkles,
+  LuDownload as Download,
+  LuLayoutList as Layout,
+  LuPalette as Palette,
+  LuShield as Shield,
+  LuArrowRight as ArrowRight,
+  LuCheck as Check,
+  LuUser as User,
+} from "react-icons/lu";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -95,6 +95,12 @@ export default function HomePage() {
               </span>
             </Link>
             <nav className="hidden md:flex items-center gap-8">
+              <Link
+                href="/templates"
+                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                {t("nav.templates")}
+              </Link>
               <Link
                 href="#features"
                 className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
@@ -218,7 +224,8 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative">
+        <a id="features" className="absolute -top-24" />
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
@@ -248,7 +255,8 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-slate-50">
+      <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-slate-50 relative">
+        <a id="how-it-works" className="absolute -top-24" />
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">

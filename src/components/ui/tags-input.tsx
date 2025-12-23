@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { LuX as X } from "react-icons/lu";
 
 export interface TagsInputProps {
   value: string[];
@@ -88,6 +88,7 @@ export function TagsInput({
                 removeTag(tag);
               }}
               className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+              aria-label={`Remove ${tag}`}
             >
               <X className="w-3 h-3" />
             </button>

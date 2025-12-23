@@ -95,7 +95,7 @@ export interface Template {
   name: string;
   description: string;
   preview: string;
-  category: "modern" | "classic" | "creative" | "minimal";
+  category: "modern" | "classic" | "creative" | "minimal" | "professional" | "executive" | "compact" | "tech" | "academic";
 }
 
 export const defaultCVData: CVData = {

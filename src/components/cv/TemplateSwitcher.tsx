@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Layout, Check } from "lucide-react";
+import { LuLayoutList as Layout, LuCheck as Check } from "react-icons/lu";
 import { useState } from "react";
 
 export function TemplateSwitcher() {
@@ -26,10 +26,15 @@ export function TemplateSwitcher() {
     classic: { name: t("template.classic"), desc: t("template.classicDesc") },
     minimal: { name: t("template.minimal"), desc: t("template.minimalDesc") },
     creative: { name: t("template.creative"), desc: t("template.creativeDesc") },
+    tech: { name: t("template.tech"), desc: t("template.techDesc") },
+    executive: { name: t("template.executive"), desc: t("template.executiveDesc") },
+    compact: { name: t("template.compact"), desc: t("template.compactDesc") },
+    bold: { name: t("template.bold"), desc: t("template.boldDesc") },
+    academic: { name: t("template.academic"), desc: t("template.academicDesc") },
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" style={{ "--theme-color": cvData.themeColor } as React.CSSProperties}>
       {/* Template Selector */}
       <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
         <DialogTrigger asChild>
@@ -38,11 +43,11 @@ export function TemplateSwitcher() {
             {t("editor.template")}
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[85vh]">
           <DialogHeader>
             <DialogTitle>{t("template.choose")}</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-2 gap-4 mt-4 overflow-y-auto max-h-[calc(85vh-8rem)] pr-2">
             {templates.map((template) => (
               <button
                 key={template.id}
@@ -66,12 +71,11 @@ export function TemplateSwitcher() {
                 <div className="aspect-[210/297] bg-slate-100 rounded-lg mb-3 overflow-hidden">
                   <div className="w-full h-full p-3 space-y-2">
                     <div
-                      className="h-2 rounded w-1/2"
-                      style={{ backgroundColor: cvData.themeColor }}
+                      className="h-2 rounded w-1/2 bg-[color:var(--theme-color)]"
                     />
                     <div className="h-1.5 bg-slate-200 rounded w-3/4" />
                     <div className="h-1.5 bg-slate-200 rounded w-2/3" />
-                    <div className="mt-2 h-1.5 rounded w-1/3" style={{ backgroundColor: cvData.themeColor, opacity: 0.5 }} />
+                    <div className="mt-2 h-1.5 rounded w-1/3 bg-[color:var(--theme-color)]/50" />
                     <div className="h-1.5 bg-slate-200 rounded w-full" />
                     <div className="h-1.5 bg-slate-200 rounded w-5/6" />
                   </div>
@@ -91,8 +95,7 @@ export function TemplateSwitcher() {
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
             <div
-              className="w-4 h-4 rounded-full border border-slate-200"
-              style={{ backgroundColor: cvData.themeColor }}
+              className="w-4 h-4 rounded-full border border-slate-200 bg-[color:var(--theme-color)]"
             />
             {t("editor.color")}
           </Button>
@@ -132,4 +135,3 @@ export function TemplateSwitcher() {
     </div>
   );
 }
-
