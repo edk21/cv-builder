@@ -15,6 +15,7 @@ import { createClient } from "@/lib/supabaseClient";
 import { CVData } from "@/types/cv";
 import {
   Copy,
+  Crown,
   Edit3,
   FileText,
   Loader2,
@@ -24,12 +25,15 @@ import {
   Plus,
   Search,
   Shield,
+  Sparkles,
   Trash2,
   User
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSubscription } from "@/hooks/useSubscription";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -46,6 +50,11 @@ export default function DashboardPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+
+  // Subscription management
+  const { isPremium, cvCount, cvLimit, canCreateCV, canDuplicate, refresh } = useSubscription();
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"save" | "download" | "duplicate" | "create">("create");
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
@@ -161,6 +170,7 @@ export default function DashboardPage() {
       if (response.ok) {
         setCvList(cvList.filter((cv) => cv.id !== id));
         setMenuOpen(null);
+        refresh();
       } else {
         console.error("Failed to delete CV");
         alert("Erreur lors de la suppression du CV");
@@ -172,6 +182,14 @@ export default function DashboardPage() {
   };
 
   const handleDuplicate = async (cv: CVData) => {
+    // Check if user can duplicate
+    if (!canDuplicate) {
+      setUpgradeReason("duplicate");
+      setUpgradeModalOpen(true);
+      setMenuOpen(null);
+      return;
+    }
+
     try {
       const newCVData = {
         ...cv,
@@ -192,13 +210,32 @@ export default function DashboardPage() {
         setCvList([createdCV, ...cvList]);
         setMenuOpen(null);
       } else {
-        console.error("Failed to duplicate CV");
-        alert("Erreur lors de la duplication du CV");
+        const errorData = await response.json();
+        console.error("Failed to duplicate CV:", errorData);
+
+        // If it's a subscription limit error, show upgrade modal
+        if (response.status === 403 && errorData.error === "Limite atteinte") {
+          setUpgradeReason("duplicate");
+          setUpgradeModalOpen(true);
+          setMenuOpen(null);
+        } else {
+          alert(errorData.message || "Erreur lors de la duplication du CV");
+        }
       }
     } catch (error) {
       console.error("Error duplicating CV:", error);
       alert("Erreur lors de la duplication du CV");
     }
+  };
+
+  // Handler for creating new CV
+  const handleNewCV = () => {
+    if (!canCreateCV) {
+      setUpgradeReason("create");
+      setUpgradeModalOpen(true);
+      return;
+    }
+    router.push("/editor/new");
   };
 
   // Filter relies on cv.name which comes correctly from the API now
@@ -294,13 +331,40 @@ export default function DashboardPage() {
               Gérez et créez vos CV professionnels
             </p>
           </div>
-          <Link href="/editor/new">
-            <Button className="shadow-lg shadow-blue-500/20">
-              <Plus className="w-4 h-4 mr-2" />
-              Nouveau CV
-            </Button>
-          </Link>
+          <Button onClick={handleNewCV} className="shadow-lg shadow-blue-500/20">
+            <Plus className="w-4 h-4 mr-2" />
+            Nouveau CV
+          </Button>
         </div>
+
+        {/* Subscription Status Banner (for free users) */}
+        {!isPremium && (
+          <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                  <Crown className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Version Gratuite</h3>
+                  <p className="text-sm text-slate-600">
+                    {cvCount} / {cvLimit} CV créé{cvCount > 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              <Button
+                onClick={() => {
+                  setUpgradeReason("create");
+                  setUpgradeModalOpen(true);
+                }}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Passer à Premium
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Search */}
         <div className="relative mb-6">
@@ -517,6 +581,13 @@ export default function DashboardPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onOpenChange={setUpgradeModalOpen}
+        reason={upgradeReason}
+      />
     </div>
   );
 }

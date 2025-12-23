@@ -3,6 +3,9 @@
         "Notion": {
             "url": "https://mcp.notion.com/mcp",
             "headers": {}
+        },
+        "supabase": {
+            "url": "https://mcp.supabase.com/mcp"
         }
     }
 }

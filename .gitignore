@@ -41,3 +41,4 @@ next-env.d.ts
 NOTION.md
 ADMIN_SETUP.md
 init.md
+.playwright-mcp/

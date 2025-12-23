@@ -1,6 +1,7 @@
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { CVData, CVDBSchema } from "@/types/cv";
 import { NextRequest, NextResponse } from "next/server";
+import { checkSubscriptionLimits } from "@/lib/subscriptionService";
 
 // HELPERS: Adapter functions to transform between DB and Frontend types
 
@@ -271,6 +272,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
+    // Check subscription limits before creating new CV
+    const limits = await checkSubscriptionLimits(user.id);
+
+    if (!limits.canSaveCV) {
+      return NextResponse.json(
+        {
+          error: "Limite atteinte",
+          message:
+            "Vous avez atteint la limite de CVs pour votre abonnement gratuit. Passez à Premium pour créer des CVs illimités.",
+          isPremium: limits.isPremium,
+          cvCount: limits.cvCount,
+          cvLimit: limits.cvLimit,
+        },
+        { status: 403 }
+      );
+    }
+
     const body = (await request.json()) as CVData;
 
     // Construct the DB payload with separate columns
@@ -354,6 +372,31 @@ export async function PUT(request: NextRequest) {
 
     if (!existingCV || existingCV.user_id !== user.id) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    }
+
+    // Check subscription limits and CV access
+    const limits = await checkSubscriptionLimits(user.id);
+
+    // Get all user CVs ordered by creation date to determine CV index
+    const { data: userCVs } = await supabase
+      .from("cvs")
+      .select("id, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: true });
+
+    const cvIndex = userCVs?.findIndex((cv) => cv.id === id) ?? -1;
+
+    // Free users can only edit/save their first CV (index 0)
+    // CVs with index > 0 are in preview mode for free users
+    if (!limits.isPremium && cvIndex > 0) {
+      return NextResponse.json(
+        {
+          error: "Modification non autorisée",
+          message:
+            "Vous ne pouvez modifier que votre premier CV en version gratuite. Passez à Premium pour accéder à tous vos CVs.",
+        },
+        { status: 403 }
+      );
     }
 
     // Support both old schema (title) and new schema (name)

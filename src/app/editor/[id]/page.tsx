@@ -22,17 +22,21 @@ import { createClient } from "@/lib/supabaseClient";
 import { defaultCVData } from "@/types/cv";
 import { translations } from "@/lib/i18n/translations";
 import {
-  FileText,
-  Save,
-  Download,
+  AlertCircle,
   ArrowLeft,
-  Loader2,
   Check,
+  Download,
+  Eye,
+  FileText,
+  Loader2,
+  Lock,
+  Save,
+  User,
   ZoomIn,
   ZoomOut,
-  User,
-  Eye,
 } from "lucide-react";
+import { useSubscription } from "@/hooks/useSubscription";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -51,6 +55,12 @@ export default function EditorPage({ params }: PageProps) {
   const [zoom, setZoom] = useState(0.7);
   const [editingName, setEditingName] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+
+  // Subscription management
+  const { isPremium, canSaveCV, canDownloadCV, loading: subscriptionLoading } = useSubscription();
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"save" | "download" | "duplicate" | "create">("save");
 
   // Check if the CV name is a default translated name (for dynamic translation)
   const defaultCvNames = Object.values(translations).map(t => t["editor.newCvName"]).filter(Boolean);
@@ -95,7 +105,53 @@ export default function EditorPage({ params }: PageProps) {
     init();
   }, [id, loadCVData, router, setDirty]);
 
+  // Check if this CV is in preview mode
+  useEffect(() => {
+    const checkPreviewMode = async () => {
+      // Wait for everything to be loaded
+      if (loading || subscriptionLoading || !user) {
+        return;
+      }
+
+      // If it's a new CV
+      if (id === "new") {
+        setIsPreviewMode(!canSaveCV);
+        return;
+      }
+
+      // If it's an existing CV, check if it's the 2nd+ CV for free user
+      if (cvData.id && !isPremium) {
+        try {
+          const response = await fetch("/api/cv");
+          if (response.ok) {
+            const allCVs = await response.json();
+            // Sort by creation date to find the index
+            const sortedCVs = allCVs.sort((a: any, b: any) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+            const cvIndex = sortedCVs.findIndex((cv: any) => cv.id === cvData.id);
+            // If index > 0 (not the first CV), it's in preview mode
+            setIsPreviewMode(cvIndex > 0);
+          }
+        } catch (error) {
+          console.error("Error checking preview mode:", error);
+        }
+      } else {
+        // Premium user or first CV - not in preview mode
+        setIsPreviewMode(false);
+      }
+    };
+
+    checkPreviewMode();
+  }, [id, cvData.id, canSaveCV, isPremium, loading, subscriptionLoading, user]);
+
   const handleSave = async () => {
+    // Check if in preview mode
+    if (isPreviewMode || !canSaveCV) {
+      setUpgradeReason("save");
+      setUpgradeModalOpen(true);
+      return;
+    }
     if (!user) {
       router.push("/auth/login");
       return;
@@ -187,6 +243,13 @@ export default function EditorPage({ params }: PageProps) {
   };
 
   const handleDownload = async () => {
+    // Check if in preview mode or can't download
+    if (isPreviewMode || !canDownloadCV) {
+      setUpgradeReason("download");
+      setUpgradeModalOpen(true);
+      return;
+    }
+
     if (!user) {
       router.push("/auth/login");
       return;
@@ -283,11 +346,21 @@ export default function EditorPage({ params }: PageProps) {
               {t("editor.unsaved")}
             </span>
           )}
+
+          {/* Preview Mode Banner */}
+          {isPreviewMode && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200">
+              <AlertCircle className="w-4 h-4 text-amber-600" />
+              <span className="text-xs text-amber-700 font-medium">
+                Mode Prévisualisation - Passez à Premium pour sauvegarder
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
           <TemplateSwitcher />
-          
+
           <div className="h-6 w-px bg-slate-200 mx-2" />
 
           <LanguageSwitcher />
@@ -296,16 +369,17 @@ export default function EditorPage({ params }: PageProps) {
             variant="outline"
             size="sm"
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || isPreviewMode}
             className="gap-2"
           >
-            {saving ? (
+            {isPreviewMode && <Lock className="w-4 h-4" />}
+            {!isPreviewMode && (saving ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : saved ? (
               <Check className="w-4 h-4 text-green-500" />
             ) : (
               <Save className="w-4 h-4" />
-            )}
+            ))}
             {saving ? t("editor.saving") : saved ? t("editor.saved") : t("editor.save")}
           </Button>
 
@@ -322,14 +396,15 @@ export default function EditorPage({ params }: PageProps) {
           <Button
             size="sm"
             onClick={handleDownload}
-            disabled={downloading || !user}
+            disabled={downloading || !user || isPreviewMode}
             className="gap-2"
           >
-            {downloading ? (
+            {isPreviewMode && <Lock className="w-4 h-4" />}
+            {!isPreviewMode && (downloading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Download className="w-4 h-4" />
-            )}
+            ))}
             {t("editor.download")}
           </Button>
 
@@ -414,17 +489,25 @@ export default function EditorPage({ params }: PageProps) {
             <Button variant="outline" onClick={() => setShowPreview(false)}>
               {t("common.back")}
             </Button>
-            <Button onClick={() => { setShowPreview(false); handleDownload(); }} disabled={downloading || !user} className="gap-2">
-              {downloading ? (
+            <Button onClick={() => { setShowPreview(false); handleDownload(); }} disabled={downloading || !user || isPreviewMode} className="gap-2">
+              {isPreviewMode && <Lock className="w-4 h-4" />}
+              {!isPreviewMode && (downloading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Download className="w-4 h-4" />
-              )}
+              ))}
               {t("editor.download")}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onOpenChange={setUpgradeModalOpen}
+        reason={upgradeReason}
+      />
     </div>
   );
 }

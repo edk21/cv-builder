@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabaseClient";
 import {
   ArrowLeft,
   Calendar,
+  Crown,
   FileCheck,
   FileText,
   Loader2,
@@ -124,6 +125,44 @@ export default function AdminPage() {
     } catch (error) {
       console.error("Error updating admin status:", error);
       alert("Erreur lors de la mise à jour du statut administrateur");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const toggleSubscription = async (userId: string, currentPlan: string) => {
+    setUpdating(userId);
+    const newPlan = currentPlan === "premium" ? "free" : "premium";
+
+    try {
+      const response = await fetch("/api/admin/subscriptions", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          planType: newPlan,
+          endDate: null, // Unlimited subscription
+        }),
+      });
+
+      if (response.ok) {
+        // Mettre à jour l'état local
+        setUsers(
+          users.map((u) =>
+            u.id === userId
+              ? { ...u, subscriptionPlan: newPlan, subscriptionStatus: "active", subscriptionEndDate: null }
+              : u
+          )
+        );
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Erreur lors de la mise à jour de l'abonnement");
+      }
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+      alert("Erreur lors de la mise à jour de l'abonnement");
     } finally {
       setUpdating(null);
     }
@@ -326,6 +365,9 @@ export default function AdminPage() {
                         CVs
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">
+                        Abonnement
+                      </th>
+                      <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">
                         Statut
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">
@@ -378,6 +420,18 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td className="py-4 px-4">
+                          {userInfo.subscriptionPlan === "premium" || userInfo.subscriptionPlan === "enterprise" ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs font-medium">
+                              <Crown className="w-3 h-3" />
+                              Premium
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
+                              Gratuit
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-4 px-4">
                           {userInfo.isAdmin ? (
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-purple-100 text-purple-700 text-xs font-medium">
                               <ShieldCheck className="w-3 h-3" />
@@ -391,28 +445,52 @@ export default function AdminPage() {
                           )}
                         </td>
                         <td className="py-4 px-4">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              toggleAdminStatus(userInfo.id, userInfo.isAdmin)
-                            }
-                            disabled={updating === userInfo.id}
-                          >
-                            {updating === userInfo.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : userInfo.isAdmin ? (
-                              <>
-                                <ShieldX className="w-4 h-4 mr-1" />
-                                Retirer admin
-                              </>
-                            ) : (
-                              <>
-                                <ShieldCheck className="w-4 h-4 mr-1" />
-                                Donner admin
-                              </>
-                            )}
-                          </Button>
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                toggleSubscription(userInfo.id, userInfo.subscriptionPlan)
+                              }
+                              disabled={updating === userInfo.id}
+                            >
+                              {updating === userInfo.id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : userInfo.subscriptionPlan === "premium" || userInfo.subscriptionPlan === "enterprise" ? (
+                                <>
+                                  <Crown className="w-4 h-4 mr-1" />
+                                  Révoquer Premium
+                                </>
+                              ) : (
+                                <>
+                                  <Crown className="w-4 h-4 mr-1" />
+                                  Donner Premium
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                toggleAdminStatus(userInfo.id, userInfo.isAdmin)
+                              }
+                              disabled={updating === userInfo.id}
+                            >
+                              {updating === userInfo.id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : userInfo.isAdmin ? (
+                                <>
+                                  <ShieldX className="w-4 h-4 mr-1" />
+                                  Retirer admin
+                                </>
+                              ) : (
+                                <>
+                                  <ShieldCheck className="w-4 h-4 mr-1" />
+                                  Donner admin
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

@@ -11,6 +11,9 @@ export interface UserInfo {
   emailVerified: boolean;
   cvCount: number;
   isAdmin: boolean;
+  subscriptionPlan: string;
+  subscriptionStatus: string;
+  subscriptionEndDate: string | null;
 }
 
 /**
@@ -74,17 +77,50 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Récupérer les abonnements des utilisateurs
+    const { data: subscriptions, error: subscriptionError } = await adminSupabase
+      .from("subscriptions")
+      .select("user_id, plan_type, status, end_date")
+      .eq("status", "active")
+      .in("user_id", userIds);
+
+    if (subscriptionError) {
+      console.error("Error fetching subscriptions:", subscriptionError);
+      // Continuer même si on ne peut pas récupérer les abonnements
+    }
+
+    // Créer un map des abonnements par utilisateur
+    const subscriptionMap = new Map<string, { plan_type: string; status: string; end_date: string | null }>();
+    if (subscriptions) {
+      subscriptions.forEach((sub) => {
+        // Keep only the most recent active subscription if there are multiple
+        if (!subscriptionMap.has(sub.user_id)) {
+          subscriptionMap.set(sub.user_id, {
+            plan_type: sub.plan_type,
+            status: sub.status,
+            end_date: sub.end_date,
+          });
+        }
+      });
+    }
+
     // Formater les données utilisateur
-    const usersInfo: UserInfo[] = users.users.map((u) => ({
-      id: u.id,
-      email: u.email || "Email non disponible",
-      name: u.user_metadata?.full_name || undefined,
-      createdAt: u.created_at,
-      lastSignInAt: u.last_sign_in_at || null,
-      emailVerified: u.email_confirmed_at !== null,
-      cvCount: cvCountMap.get(u.id) || 0,
-      isAdmin: u.user_metadata?.isAdmin === true,
-    }));
+    const usersInfo: UserInfo[] = users.users.map((u) => {
+      const subscription = subscriptionMap.get(u.id);
+      return {
+        id: u.id,
+        email: u.email || "Email non disponible",
+        name: u.user_metadata?.full_name || undefined,
+        createdAt: u.created_at,
+        lastSignInAt: u.last_sign_in_at || null,
+        emailVerified: u.email_confirmed_at !== null,
+        cvCount: cvCountMap.get(u.id) || 0,
+        isAdmin: u.user_metadata?.isAdmin === true,
+        subscriptionPlan: subscription?.plan_type || "free",
+        subscriptionStatus: subscription?.status || "active",
+        subscriptionEndDate: subscription?.end_date || null,
+      };
+    });
 
     // Trier par date de création (plus récent en premier)
     usersInfo.sort((a, b) => {
