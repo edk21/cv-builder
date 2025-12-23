@@ -1,0 +1,234 @@
+# 📄 CV Crafter
+
+Un SaaS moderne de création de CV avec prévisualisation en temps réel, templates professionnels et export PDF.
+
+![CV Crafter Preview](./preview.png)
+
+## ✨ Fonctionnalités
+
+- 🎨 **Templates professionnels** - Plusieurs templates modernes et élégants
+- 👁️ **Prévisualisation en temps réel** - Visualisez vos modifications instantanément
+- 🎯 **Personnalisation** - Couleurs et mise en page adaptables
+- 📥 **Export PDF** - Téléchargez votre CV en haute qualité
+- 🔐 **Authentification** - Sauvegardez et gérez vos CV
+- 📱 **Responsive** - Interface adaptée à tous les écrans
+- 🌍 **Multilingue** - Interface disponible en 5 langues
+
+## 🛠️ Stack Technique
+
+- **Framework**: Next.js 15 (App Router, TypeScript)
+- **UI**: TailwindCSS + Composants personnalisés
+- **State Management**: Zustand
+- **Auth & DB**: Supabase
+- **Auth & DB**: Supabase
+- **Package Manager**: Bun
+- **Tests**: Jest, React Testing Library, jest-axe
+- **SEO**: Next.js Metadata, Sitemap, Robots
+
+## ✅ Qualité & Accessibilité
+
+- **Tests Automatisés** : Suite de tests `jest-axe` garantissant l'accessibilité (WCAG) des composants clés.
+- **SEO Ready** : Metadata complètes, Open Graph, Twitter Cards, Sitemap.xml et Robots.txt configurés.
+
+## 🚀 Installation
+
+### Prérequis
+
+- [Bun](https://bun.sh/) (ou Node.js 18+)
+- Un compte [Supabase](https://supabase.com)
+
+### Étapes
+
+1. **Cloner le projet**
+
+```bash
+git clone <repo-url>
+cd cv-builder
+```
+
+2. **Installer les dépendances**
+
+```bash
+bun install
+```
+
+3. **Configurer Supabase**
+
+   - Créez un projet sur [Supabase](https://supabase.com)
+   - Allez dans SQL Editor et exécutez le script `supabase/schema.sql`
+   - Récupérez votre URL et clé API dans Settings > API
+
+4. **Configurer les variables d'environnement**
+
+```bash
+cp .env.local.example .env.local
+```
+
+Puis éditez `.env.local` avec vos credentials Supabase:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=votre_url_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle_anon
+```
+
+5. **Lancer le serveur de développement**
+
+```bash
+bun dev
+```
+
+Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+
+## 📂 Structure du Projet
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # Layout global
+│   ├── page.tsx            # Landing page
+│   ├── dashboard/          # Tableau de bord utilisateur
+│   ├── editor/[id]/        # Éditeur de CV
+│   ├── auth/               # Pages d'authentification
+│   └── api/                # API Routes
+├── components/
+│   ├── cv/                 # Composants CV (Editor, Preview, etc.)
+│   └── ui/                 # Composants UI réutilisables
+├── lib/
+│   ├── i18n/               # Traductions multilingues
+│   └── ...                 # Utilitaires et configuration
+├── store/
+│   ├── cvStore.ts          # État du CV
+│   └── languageStore.ts    # État de la langue
+└── types/                  # Types TypeScript
+```
+
+## 🎨 Templates Disponibles
+
+| Template     | Description                        |
+| ------------ | ---------------------------------- |
+| **Modern**   | Design épuré et contemporain       |
+| **Classic**  | Style traditionnel à deux colonnes |
+| **Minimal**  | Design simple et élégant           |
+| **Creative** | Style audacieux et original        |
+
+## 🌍 Internationalisation (i18n)
+
+L'application supporte plusieurs langues avec un système de traduction intégré.
+
+### Langues disponibles
+
+| Langue     | Code | Drapeau |
+| ---------- | ---- | ------- |
+| Français   | `fr` | 🇫🇷      |
+| English    | `en` | 🇬🇧      |
+| Español    | `es` | 🇪🇸      |
+| Deutsch    | `de` | 🇩🇪      |
+| Nederlands | `nl` | 🇳🇱      |
+
+### Utilisation
+
+Le sélecteur de langue est disponible dans l'en-tête de l'application. La langue sélectionnée est persistée dans le `localStorage`.
+
+### Ajouter une nouvelle langue
+
+1. **Ouvrir le fichier de traductions** : `src/lib/i18n/translations.ts`
+
+2. **Ajouter le code de la langue** au type `LanguageCode` :
+
+```typescript
+export type LanguageCode = "fr" | "en" | "es" | "de" | "nl" | "votre_code";
+```
+
+3. **Ajouter les traductions** dans l'objet `translations` :
+
+```typescript
+export const translations: Record<LanguageCode, Record<string, string>> = {
+  // ... autres langues
+  votre_code: {
+    "nav.home": "Accueil",
+    "nav.editor": "Éditeur",
+    // ... toutes les clés de traduction
+  },
+};
+```
+
+4. **Ajouter la langue** dans le tableau `languages` :
+
+```typescript
+export const languages: Language[] = [
+  // ... autres langues
+  { code: "votre_code", name: "Nom de la langue", flag: "🏳️" },
+];
+```
+
+### Structure des traductions
+
+Les clés de traduction suivent une convention de nommage hiérarchique :
+
+- `nav.*` - Navigation
+- `landing.*` - Page d'accueil
+- `auth.*` - Authentification
+- `dashboard.*` - Tableau de bord
+- `editor.*` - Éditeur de CV
+  - `editor.profile.*` - Section profil
+  - `editor.experience.*` - Section expérience
+  - `editor.education.*` - Section formation
+  - `editor.skills.*` - Section compétences
+  - `editor.projects.*` - Section projets
+  - `editor.languages.*` - Section langues
+
+### Hook de traduction
+
+Utilisez le hook `useTranslation` dans vos composants :
+
+```typescript
+import { useTranslation } from "@/store/languageStore";
+
+function MonComposant() {
+  const { t } = useTranslation();
+
+  return <h1>{t("landing.title")}</h1>;
+}
+```
+
+## 🔧 Scripts Disponibles
+
+```bash
+bun dev      # Lancer en mode développement
+bun build    # Build de production
+bun start    # Lancer le build de production
+bun lint     # Linter le code
+```
+
+## 📝 Fonctionnalités MVP
+
+- [x] Landing page avec CTA
+- [x] Authentification (Login/Signup)
+- [x] Dashboard utilisateur
+- [x] Éditeur de CV en deux colonnes
+- [x] Prévisualisation en temps réel
+- [x] Changement de template
+- [x] Sélection de couleur
+- [x] Sauvegarde automatique
+- [x] Export PDF
+- [x] Interface multilingue (FR, EN, ES, DE, NL)
+
+## 🔮 Roadmap
+
+- [ ] Multi-pages PDF (A4 auto)
+- [ ] Traduction automatique (IA)
+- [ ] Plus de templates
+- [ ] Import depuis LinkedIn
+- [ ] Partage public du CV
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+
+## 📄 Licence
+
+MIT License - voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+Fait avec ❤️ par McKen Team
