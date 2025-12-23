@@ -39,3 +39,5 @@ next-env.d.ts
 
 # Notion markdown files
 NOTION.md
+ADMIN_SETUP.md
+init.md
