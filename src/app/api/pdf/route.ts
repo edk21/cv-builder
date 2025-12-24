@@ -84,6 +84,21 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Escapes HTML special characters to prevent XSS attacks
+ * @param unsafe - The string to escape
+ * @returns Escaped string safe for HTML insertion
+ */
+function escapeHtml(unsafe: string): string {
+  if (!unsafe) return "";
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function generateCVHTML(cvData: CVData): string {
   const { personalInfo, experiences, education, skills, projects, languages } = cvData;
   const themeColor = cvData.themeColor || "#2563eb";
@@ -100,7 +115,7 @@ function generateCVHTML(cvData: CVData): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${personalInfo.firstName} ${personalInfo.lastName} - CV</title>
+  <title>${escapeHtml(personalInfo.firstName)} ${escapeHtml(personalInfo.lastName)} - CV</title>
   <style>
     @page {
       size: A4;
@@ -255,12 +270,12 @@ function generateCVHTML(cvData: CVData): string {
 <body>
   <div class="page">
     <header class="header">
-      <div class="name">${personalInfo.firstName || "Prénom"} ${personalInfo.lastName || "Nom"}</div>
-      ${personalInfo.title ? `<div class="title">${personalInfo.title}</div>` : ""}
+      <div class="name">${escapeHtml(personalInfo.firstName || "Prénom")} ${escapeHtml(personalInfo.lastName || "Nom")}</div>
+      ${personalInfo.title ? `<div class="title">${escapeHtml(personalInfo.title)}</div>` : ""}
       <div class="contact">
-        ${personalInfo.email ? `<span class="contact-item">📧 ${personalInfo.email}</span>` : ""}
-        ${personalInfo.phone ? `<span class="contact-item">📱 ${personalInfo.phone}</span>` : ""}
-        ${personalInfo.city || personalInfo.country ? `<span class="contact-item">📍 ${[personalInfo.city, personalInfo.country].filter(Boolean).join(", ")}</span>` : ""}
+        ${personalInfo.email ? `<span class="contact-item">📧 ${escapeHtml(personalInfo.email)}</span>` : ""}
+        ${personalInfo.phone ? `<span class="contact-item">📱 ${escapeHtml(personalInfo.phone)}</span>` : ""}
+        ${personalInfo.city || personalInfo.country ? `<span class="contact-item">📍 ${escapeHtml([personalInfo.city, personalInfo.country].filter(Boolean).join(", "))}</span>` : ""}
         ${personalInfo.linkedin ? `<span class="contact-item">💼 LinkedIn</span>` : ""}
         ${personalInfo.github ? `<span class="contact-item">💻 GitHub</span>` : ""}
       </div>
@@ -269,7 +284,7 @@ function generateCVHTML(cvData: CVData): string {
     ${personalInfo.summary ? `
     <section class="section">
       <h2 class="section-title">Profil</h2>
-      <p class="item-description">${personalInfo.summary}</p>
+      <p class="item-description">${escapeHtml(personalInfo.summary)}</p>
     </section>
     ` : ""}
 
@@ -280,12 +295,12 @@ function generateCVHTML(cvData: CVData): string {
         <div class="item">
           <div class="item-header">
             <div>
-              <div class="item-title">${exp.position || "Poste"}</div>
-              <div class="item-subtitle">${exp.company}${exp.location ? ` • ${exp.location}` : ""}</div>
+              <div class="item-title">${escapeHtml(exp.position || "Poste")}</div>
+              <div class="item-subtitle">${escapeHtml(exp.company)}${exp.location ? ` • ${escapeHtml(exp.location)}` : ""}</div>
             </div>
             <div class="item-date">${formatDate(exp.startDate)} - ${exp.current ? "Présent" : formatDate(exp.endDate)}</div>
           </div>
-          ${exp.description ? `<p class="item-description">${exp.description}</p>` : ""}
+          ${exp.description ? `<p class="item-description">${escapeHtml(exp.description)}</p>` : ""}
         </div>
       `).join("")}
     </section>
@@ -298,12 +313,12 @@ function generateCVHTML(cvData: CVData): string {
         <div class="item">
           <div class="item-header">
             <div>
-              <div class="item-title">${edu.degree}${edu.field ? ` en ${edu.field}` : ""}</div>
-              <div class="item-subtitle">${edu.institution}${edu.location ? ` • ${edu.location}` : ""}</div>
+              <div class="item-title">${escapeHtml(edu.degree)}${edu.field ? ` en ${escapeHtml(edu.field)}` : ""}</div>
+              <div class="item-subtitle">${escapeHtml(edu.institution)}${edu.location ? ` • ${escapeHtml(edu.location)}` : ""}</div>
             </div>
             <div class="item-date">${formatDate(edu.startDate)} - ${edu.current ? "Présent" : formatDate(edu.endDate)}</div>
           </div>
-          ${edu.description ? `<p class="item-description">${edu.description}</p>` : ""}
+          ${edu.description ? `<p class="item-description">${escapeHtml(edu.description)}</p>` : ""}
         </div>
       `).join("")}
     </section>
@@ -313,7 +328,7 @@ function generateCVHTML(cvData: CVData): string {
     <section class="section">
       <h2 class="section-title">Compétences</h2>
       <div class="skills-list">
-        ${skills.map(skill => `<span class="skill-tag">${skill.name || "Compétence"}</span>`).join("")}
+        ${skills.map(skill => `<span class="skill-tag">${escapeHtml(skill.name || "Compétence")}</span>`).join("")}
       </div>
     </section>
     ` : ""}
@@ -323,11 +338,11 @@ function generateCVHTML(cvData: CVData): string {
       <h2 class="section-title">Projets</h2>
       ${projects.map(project => `
         <div class="item">
-          <div class="item-title">${project.name || "Projet"}</div>
-          ${project.description ? `<p class="item-description">${project.description}</p>` : ""}
+          <div class="item-title">${escapeHtml(project.name || "Projet")}</div>
+          ${project.description ? `<p class="item-description">${escapeHtml(project.description)}</p>` : ""}
           ${project.technologies.length > 0 ? `
             <div class="skills-list" style="margin-top: 5px;">
-              ${project.technologies.map(tech => `<span class="skill-tag">${tech}</span>`).join("")}
+              ${project.technologies.map(tech => `<span class="skill-tag">${escapeHtml(tech)}</span>`).join("")}
             </div>
           ` : ""}
         </div>
@@ -341,8 +356,8 @@ function generateCVHTML(cvData: CVData): string {
       <div class="languages-list">
         ${languages.map(lang => `
           <span class="language-item">
-            <strong>${lang.name || "Langue"}</strong>
-            <span class="language-level">(${lang.level})</span>
+            <strong>${escapeHtml(lang.name || "Langue")}</strong>
+            <span class="language-level">(${escapeHtml(lang.level)})</span>
           </span>
         `).join("")}
       </div>

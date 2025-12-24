@@ -27,10 +27,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (newPassword.length < 6) {
+    // Strong password validation: minimum 8 characters with uppercase, lowercase, and number
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
       return NextResponse.json(
         {
-          error: "Le nouveau mot de passe doit contenir au moins 6 caractères",
+          error: "Le nouveau mot de passe doit contenir au moins 8 caractères, incluant une majuscule, une minuscule et un chiffre",
         },
         { status: 400 }
       );
