@@ -31,7 +31,7 @@ import {
 import { FiMoreVertical as MoreVertical } from "react-icons/fi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradeModal } from "@/components/UpgradeModal";
 
@@ -76,7 +76,8 @@ export default function DashboardPage() {
       setIsUserAdmin(authUser.user_metadata?.isAdmin === true);
 
       try {
-        const response = await fetch("/api/cv");
+        // Use list=true for optimized query (only fetch necessary fields)
+        const response = await fetch("/api/cv?list=true");
         if (response.ok) {
           const cvs = await response.json();
           setCvList(cvs);
@@ -229,19 +230,23 @@ export default function DashboardPage() {
   };
 
   // Handler for creating new CV
-  const handleNewCV = () => {
+  const handleNewCV = useCallback(() => {
     if (!canCreateCV) {
       setUpgradeReason("create");
       setUpgradeModalOpen(true);
       return;
     }
     router.push("/editor/new");
-  };
+  }, [canCreateCV, router]);
 
-  // Filter relies on cv.name which comes correctly from the API now
-  const filteredCVs = cvList.filter((cv) =>
-    cv.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Memoize filtered CVs to prevent unnecessary recalculations
+  const filteredCVs = useMemo(() => {
+    if (!searchQuery) return cvList;
+    const lowerQuery = searchQuery.toLowerCase();
+    return cvList.filter((cv) =>
+      cv.name?.toLowerCase().includes(lowerQuery)
+    );
+  }, [cvList, searchQuery]);
 
   if (loading) {
     return (
