@@ -14,10 +14,19 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Non autorisé. Veuillez vous connecter." },
-        { status: 401 }
-      );
+      // Default to free plan if no user is found (guest access)
+      return NextResponse.json({
+        isPremium: false,
+        planType: 'free',
+        status: 'active',
+        endDate: null,
+        cvCount: 0,
+        cvLimit: 1,
+        canCreateCV: true,
+        canSaveCV: true,
+        canDownloadCV: true,
+        canDuplicate: true,
+      });
     }
 
     // Get subscription limits for this user

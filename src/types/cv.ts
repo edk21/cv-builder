@@ -13,6 +13,7 @@ export interface PersonalInfo {
   github?: string;
   website?: string;
   photo?: string;
+  showPhoto?: boolean;
 }
 
 export interface Experience {
@@ -113,6 +114,8 @@ export const defaultCVData: CVData = {
     country: "",
     title: "",
     summary: "",
+    photo: "",
+    showPhoto: true,
   },
   experiences: [],
   education: [],

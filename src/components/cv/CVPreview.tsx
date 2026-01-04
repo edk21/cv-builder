@@ -29,12 +29,21 @@ export function CVPreview() {
       >
         {/* Header */}
         <header className="border-b-2 pb-6 mb-6 border-[color:var(--theme-color)]">
-          <h1 className="text-3xl font-bold text-[color:var(--theme-color)]">
-            {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
-          </h1>
-          {personalInfo.title && (
-            <p className="text-lg text-slate-600 mt-1">{personalInfo.title}</p>
-          )}
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-[color:var(--theme-color)]">
+                {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
+              </h1>
+              {personalInfo.title && (
+                <p className="text-lg text-slate-600 mt-1">{personalInfo.title}</p>
+              )}
+            </div>
+            {personalInfo.showPhoto !== false && personalInfo.photo && (
+              <div className="w-24 h-24 rounded-lg overflow-hidden border-2 border-[color:var(--theme-color)] ml-4 shrink-0">
+                <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+              </div>
+            )}
+          </div>
 
           {/* Contact Info */}
           <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-600">
@@ -257,6 +266,11 @@ export function CVPreview() {
       >
         {/* Header - Centré et épuré */}
         <header className="text-center mb-12">
+          {personalInfo.showPhoto !== false && personalInfo.photo && (
+            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border border-slate-200">
+              <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+            </div>
+          )}
           <h1 className="text-4xl font-light tracking-wide mb-2">
             {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
           </h1>
@@ -447,6 +461,15 @@ export function CVPreview() {
         <div
           className="w-1/3 p-6 text-white bg-[color:var(--theme-color)]"
         >
+          {/* Photo */}
+          {personalInfo.showPhoto !== false && personalInfo.photo && (
+            <div className="mb-6">
+              <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-white/50 mx-auto">
+                <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          )}
+
           {/* Name */}
           <div className="mb-8">
             <h1 className="text-2xl font-bold leading-tight">
@@ -725,16 +748,23 @@ export function CVPreview() {
         {/* Header with creative layout */}
         <header className="relative mb-8 pb-6 border-b-4 border-[color:var(--theme-color)]">
           <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
-                {personalInfo.firstName || t("cv.placeholder.firstName")}
-              </h1>
-              <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
-                {personalInfo.lastName || t("cv.placeholder.lastName")}
-              </h1>
-              {personalInfo.title && (
-                <p className="text-lg text-slate-600 mt-2 font-medium">{personalInfo.title}</p>
+            <div className="flex flex-row items-center gap-4">
+              {personalInfo.showPhoto !== false && personalInfo.photo && (
+                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-[color:var(--theme-color)] shadow-lg shrink-0">
+                  <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+                </div>
               )}
+              <div>
+                <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
+                  {personalInfo.firstName || t("cv.placeholder.firstName")}
+                </h1>
+                <h1 className="text-4xl font-bold mb-2 text-[color:var(--theme-color)]">
+                  {personalInfo.lastName || t("cv.placeholder.lastName")}
+                </h1>
+                {personalInfo.title && (
+                  <p className="text-lg text-slate-600 mt-2 font-medium">{personalInfo.title}</p>
+                )}
+              </div>
             </div>
             {/* Contact in a box */}
             <div className="bg-slate-50 p-4 rounded-lg border-2 border-[color:var(--theme-color)]">
@@ -952,17 +982,24 @@ export function CVPreview() {
         {/* Header style terminal */}
         <header className="bg-slate-900 text-white p-6 rounded-lg mb-8 shadow-sm">
           <div className="flex justify-between items-start">
-            <div>
-              <h1
-                className="text-3xl font-mono font-bold mb-2"
-                style={{ color: "#4ade80" }} // keeping the terminal green if requested, or use theme color
-              >
-                {">"} {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
-                <span className="animate-pulse">_</span>
-              </h1>
-              {personalInfo.title && (
-                <p className="text-lg text-slate-400 font-mono">{personalInfo.title}</p>
+            <div className="flex flex-row items-center gap-6">
+              {personalInfo.showPhoto !== false && personalInfo.photo && (
+                <div className="w-20 h-20 overflow-hidden border border-[#4ade80] shadow-[0_0_10px_rgba(74,222,128,0.3)] shrink-0">
+                  <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover grayscale brightness-110 contrast-125" />
+                </div>
               )}
+              <div>
+                <h1
+                  className="text-3xl font-mono font-bold mb-2"
+                  style={{ color: "#4ade80" }} // keeping the terminal green if requested, or use theme color
+                >
+                  {">"} {personalInfo.firstName || t("cv.placeholder.firstName")} {personalInfo.lastName || t("cv.placeholder.lastName")}
+                  <span className="animate-pulse">_</span>
+                </h1>
+                {personalInfo.title && (
+                  <p className="text-lg text-slate-400 font-mono">{personalInfo.title}</p>
+                )}
+              </div>
             </div>
             
             <div className="text-right text-xs font-mono text-slate-400 space-y-1">

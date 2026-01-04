@@ -270,8 +270,17 @@ function generateCVHTML(cvData: CVData): string {
 <body>
   <div class="page">
     <header class="header">
-      <div class="name">${escapeHtml(personalInfo.firstName || "Prénom")} ${escapeHtml(personalInfo.lastName || "Nom")}</div>
-      ${personalInfo.title ? `<div class="title">${escapeHtml(personalInfo.title)}</div>` : ""}
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div class="name">${escapeHtml(personalInfo.firstName || "Prénom")} ${escapeHtml(personalInfo.lastName || "Nom")}</div>
+          ${personalInfo.title ? `<div class="title">${escapeHtml(personalInfo.title)}</div>` : ""}
+        </div>
+        ${personalInfo.showPhoto !== false && personalInfo.photo ? `
+          <div style="width: 80pt; height: 80pt; border-radius: 8px; overflow: hidden; border: 1px solid ${themeColor}; margin-left: 20px;">
+            <img src="${personalInfo.photo}" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        ` : ""}
+      </div>
       <div class="contact">
         ${personalInfo.email ? `<span class="contact-item">📧 ${escapeHtml(personalInfo.email)}</span>` : ""}
         ${personalInfo.phone ? `<span class="contact-item">📱 ${escapeHtml(personalInfo.phone)}</span>` : ""}

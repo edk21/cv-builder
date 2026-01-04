@@ -128,7 +128,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.zoom": "Zoom",
     "editor.newCvName": "Mon nouveau CV",
 
-    // Editor Tabs
+    "editor.personal.showPhoto": "Utiliser une photo",
+    "editor.personal.photo": "URL de la photo",
+    "editor.personal.photo.section": "Photo",
+    "editor.personal.photo.dropzone": "Glissez-déposez une photo ou cliquez pour parcourir",
+    "editor.personal.photo.remove": "Supprimer la photo",
+    "editor.personal.photo.invalid": "Le fichier doit être une image",
+    "editor.personal.photo.hint": "Utilisez une image carrée pour un meilleur rendu",
     "editor.tab.profile": "Profil",
     "editor.tab.experience": "Expérience",
     "editor.tab.education": "Formation",
@@ -402,6 +408,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.newCvName": "My new CV",
 
     // Editor Tabs
+    "editor.personal.showPhoto": "Use a photo",
+    "editor.personal.photo": "Photo URL",
+    "editor.personal.photo.section": "Photo",
+    "editor.personal.photo.dropzone": "Drag & drop a photo or click to browse",
+    "editor.personal.photo.remove": "Remove photo",
+    "editor.personal.photo.invalid": "File must be an image",
+    "editor.personal.photo.hint": "Use a square image for the best result",
     "editor.tab.profile": "Profile",
     "editor.tab.experience": "Experience",
     "editor.tab.education": "Education",
@@ -657,6 +670,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.newCvName": "Mi nuevo CV",
 
     // Editor Tabs
+    "editor.personal.showPhoto": "Usar una foto",
+    "editor.personal.photo": "URL de la foto",
+    "editor.personal.photo.section": "Foto",
+    "editor.personal.photo.dropzone": "Arrastra y suelta una foto o haz clic para buscar",
+    "editor.personal.photo.remove": "Eliminar foto",
+    "editor.personal.photo.invalid": "El archivo debe ser una imagen",
+    "editor.personal.photo.hint": "Usa una imagen cuadrada para un mejor resultado",
     "editor.tab.profile": "Perfil",
     "editor.tab.experience": "Experiencia",
     "editor.tab.education": "Educación",
@@ -869,6 +889,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.unsaved": "Nicht gespeichert",
     "editor.newCvName": "Mein neuer Lebenslauf",
 
+    "editor.personal.showPhoto": "Ein Foto verwenden",
+    "editor.personal.photo": "Foto-URL",
+    "editor.personal.photo.section": "Foto",
+    "editor.personal.photo.dropzone": "Foto hierher ziehen oder klicken zum Durchsuchen",
+    "editor.personal.photo.remove": "Foto entfernen",
+    "editor.personal.photo.invalid": "Datei muss ein Bild sein",
+    "editor.personal.photo.hint": "Verwenden Sie ein quadratisches Bild für das beste Ergebnis",
     "editor.tab.profile": "Profil",
     "editor.tab.experience": "Erfahrung",
     "editor.tab.education": "Ausbildung",
@@ -1135,6 +1162,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.newCvName": "Mijn nieuwe CV",
 
     // Editor Tabs
+    "editor.personal.showPhoto": "Een foto gebruiken",
+    "editor.personal.photo": "Foto URL",
+    "editor.personal.photo.section": "Foto",
+    "editor.personal.photo.dropzone": "Sleep een foto hierheen of klik om te bladeren",
+    "editor.personal.photo.remove": "Foto verwijderen",
+    "editor.personal.photo.invalid": "Bestand moet een afbeelding zijn",
+    "editor.personal.photo.hint": "Gebruik een vierkante afbeelding voor het beste resultaat",
     "editor.tab.profile": "Profiel",
     "editor.tab.experience": "Ervaring",
     "editor.tab.education": "Opleiding",

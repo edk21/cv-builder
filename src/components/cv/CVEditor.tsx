@@ -1,7 +1,8 @@
 "use client";
 
+import { ImageUpload } from "./ImageUpload";
 import { useCVStore } from "@/store/cvStore";
-import { useTranslation } from "@/store/languageStore";
+import { useLanguageStore, useTranslation } from "@/store/languageStore";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -131,7 +132,38 @@ export function CVEditor() {
                   value={cvData.personalInfo.title}
                   onChange={(e) => updatePersonalInfo({ title: e.target.value })}
                 />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <h3 className="text-sm font-semibold text-slate-900">{t("editor.personal.photo.section") || "Photo"}</h3>
+                  <Checkbox
+                    label={t("editor.personal.showPhoto") || "Utiliser une photo"}
+                    checked={cvData.personalInfo.showPhoto}
+                    onChange={(e) => updatePersonalInfo({ showPhoto: (e.target as HTMLInputElement).checked })}
+                  />
+                </div>
+
+                {cvData.personalInfo.showPhoto !== false && (
+                  <div className="flex gap-6 animate-in fade-in slide-in-from-top-2 duration-300 pt-2">
+                    <div className="w-1/3 text-center">
+                      <ImageUpload
+                        value={cvData.personalInfo.photo || ""}
+                        onChange={(val) => updatePersonalInfo({ photo: val })}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Input
+                        label={t("editor.personal.photo") || "Photo URL"}
+                        placeholder="https://example.com/photo.jpg"
+                        value={cvData.personalInfo.photo || ""}
+                        onChange={(e) => updatePersonalInfo({ photo: e.target.value })}
+                      />
+                      <p className="text-xs text-slate-400 mt-2 italic">
+                        {t("editor.personal.photo.hint") || "Utilisez une image carrée pour un meilleur rendu"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 pt-2">
                   <Input
                     label={t("editor.personal.email")}
                     type="email"
