@@ -115,7 +115,7 @@ export const defaultCVData: CVData = {
     title: "",
     summary: "",
     photo: "",
-    showPhoto: true,
+    showPhoto: false,
   },
   experiences: [],
   education: [],
