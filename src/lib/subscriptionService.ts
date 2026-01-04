@@ -112,16 +112,16 @@ export async function checkSubscriptionLimits(userId: string): Promise<Subscript
     const planType: SubscriptionPlan = subscription?.planType || 'free';
     const isPremium = planType === 'premium' || planType === 'enterprise';
 
-    // Free tier: 1 CV limit
+    // Free tier: 2 CV limit
     // Premium/Enterprise: unlimited CVs
-    const cvLimit = isPremium ? null : 1;
+    const cvLimit = isPremium ? null : 2;
 
-    // Free users can create a 2nd CV in preview mode (canCreateCV = true)
-    // But they can only save/download 1 CV (canSaveCV = false for 2nd)
-    const canCreateCV = isPremium || cvCount < 2;
-    const canSaveCV = isPremium || cvCount < 1;
-    const canDownloadCV = isPremium || cvCount < 1;
-    const canDuplicate = isPremium || cvCount < 1;
+    // Free users can create a 3rd CV in preview mode (canCreateCV = true)
+    // But they can only save/download 2 CVs (canSaveCV = false for 3rd)
+    const canCreateCV = isPremium || cvCount < 3;
+    const canSaveCV = isPremium || cvCount < 2;
+    const canDownloadCV = isPremium || cvCount < 2;
+    const canDuplicate = isPremium || cvCount < 2;
 
     return {
       isPremium,
@@ -274,14 +274,14 @@ export async function checkCVAccess(
       return { canEdit: true, canSave: true, canDownload: true };
     }
 
-    // Free users can only edit/save/download their first CV (index 0)
-    // They can edit 2nd+ CVs but cannot save or download them (preview mode)
-    const isFirstCV = cvIndex === 0;
+    // Free users can only edit/save/download their first two CVs (index 0 and 1)
+    // They can edit 3rd+ CVs but cannot save or download them (preview mode)
+    const isWithinFreeLimit = cvIndex <= 1;
 
     return {
       canEdit: true, // Free users can edit all their CVs
-      canSave: isFirstCV, // Can only save first CV
-      canDownload: isFirstCV, // Can only download first CV
+      canSave: isWithinFreeLimit, // Can only save first two CVs
+      canDownload: isWithinFreeLimit, // Can only download first two CVs
     };
   } catch (error) {
     console.error('Error in checkCVAccess:', error);

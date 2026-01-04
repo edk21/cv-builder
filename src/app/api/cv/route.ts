@@ -393,14 +393,14 @@ export async function PUT(request: NextRequest) {
 
     const cvIndex = userCVs?.findIndex((cv) => cv.id === id) ?? -1;
 
-    // Free users can only edit/save their first CV (index 0)
-    // CVs with index > 0 are in preview mode for free users
-    if (!limits.isPremium && cvIndex > 0) {
+    // Free users can only edit/save their first two CVs (index 0 and 1)
+    // CVs with index > 1 are in preview mode for free users
+    if (!limits.isPremium && cvIndex > 1) {
       return NextResponse.json(
         {
           error: "Modification non autorisée",
           message:
-            "Vous ne pouvez modifier que votre premier CV en version gratuite. Passez à Premium pour accéder à tous vos CVs.",
+            "Vous ne pouvez modifier que vos deux premiers CVs en version gratuite. Passez à Premium pour accéder à tous vos CVs.",
         },
         { status: 403 }
       );

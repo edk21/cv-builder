@@ -130,8 +130,8 @@ export default function EditorPage({ params }: PageProps) {
               new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
             );
             const cvIndex = sortedCVs.findIndex((cv: any) => cv.id === cvData.id);
-            // If index > 0 (not the first CV), it's in preview mode
-            setIsPreviewMode(cvIndex > 0);
+            // If index > 1 (not the first or second CV), it's in preview mode
+            setIsPreviewMode(cvIndex > 1);
           }
         } catch (error) {
           console.error("Error checking preview mode:", error);
