@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const buffer = await generatePDFBuffer(cvData);
     console.log("PDF generated successfully, size:", buffer.length);
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
