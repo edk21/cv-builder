@@ -67,17 +67,17 @@ export const templates: Template[] = [
 ];
 
 export const themeColors = [
-  { name: "Bleu", value: "#2563eb" },
-  { name: "Indigo", value: "#4f46e5" },
-  { name: "Violet", value: "#7c3aed" },
-  { name: "Rose", value: "#db2777" },
-  { name: "Rouge", value: "#dc2626" },
-  { name: "Orange", value: "#ea580c" },
-  { name: "Vert", value: "#16a34a" },
-  { name: "Teal", value: "#0d9488" },
-  { name: "Cyan", value: "#0891b2" },
-  { name: "Gris", value: "#475569" },
-  { name: "Noir", value: "#18181b" },
+  { name: "color.blue", value: "#2563eb" },
+  { name: "color.indigo", value: "#4f46e5" },
+  { name: "color.violet", value: "#7c3aed" },
+  { name: "color.pink", value: "#db2777" },
+  { name: "color.red", value: "#dc2626" },
+  { name: "color.orange", value: "#ea580c" },
+  { name: "color.green", value: "#16a34a" },
+  { name: "color.teal", value: "#0d9488" },
+  { name: "color.cyan", value: "#0891b2" },
+  { name: "color.gray", value: "#475569" },
+  { name: "color.black", value: "#18181b" },
 ];
 
 export function getTemplate(id: string): Template | undefined {

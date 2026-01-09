@@ -30,6 +30,7 @@ import {
   LuFileText as FileText,
   LuLoader as Loader2,
   LuLock as Lock,
+  LuPencil as Pencil,
   LuSave as Save,
   LuUser as User,
   LuZoomIn as ZoomIn,
@@ -334,10 +335,11 @@ export default function EditorPage({ params }: PageProps) {
             />
           ) : (
             <button
-              className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+              className="group flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
               onClick={() => setEditingName(true)}
             >
               {displayName}
+              <Pencil className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
             </button>
           )}
 

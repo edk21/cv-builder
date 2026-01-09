@@ -127,6 +127,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.unsaved": "Non sauvegardé",
     "editor.zoom": "Zoom",
     "editor.newCvName": "Mon nouveau CV",
+    "editor.datePicker.placeholder": "Choisir une date",
 
     "editor.personal.showPhoto": "Utiliser une photo",
     "editor.personal.photo": "URL de la photo",
@@ -244,9 +245,22 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.techDesc": "Optimisé pour les profils IT/développeurs avec section compétences mise en avant",
     "template.academic": "Académique",
     "template.academicDesc": "Pour chercheurs et profils académiques avec emphase sur publications et éducation",
+    "template.bold": "Audacieux",
+    "template.boldDesc": "Un design fort et impactant avec des contrastes marqués",
 
     // Color Dialog
     "color.choose": "Couleur du thème",
+    "color.blue": "Bleu",
+    "color.indigo": "Indigo",
+    "color.violet": "Violet",
+    "color.pink": "Rose",
+    "color.red": "Rouge",
+    "color.orange": "Orange",
+    "color.green": "Vert",
+    "color.teal": "Teal",
+    "color.cyan": "Cyan",
+    "color.gray": "Gris",
+    "color.black": "Noir",
 
     // CV Preview
     "cv.profile": "Profil",
@@ -406,6 +420,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.unsaved": "Unsaved",
     "editor.zoom": "Zoom",
     "editor.newCvName": "My new CV",
+    "editor.datePicker.placeholder": "Choose a date",
 
     // Editor Tabs
     "editor.personal.showPhoto": "Use a photo",
@@ -524,9 +539,22 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.techDesc": "Optimized for IT/developer profiles with highlighted skills section",
     "template.academic": "Academic",
     "template.academicDesc": "For researchers and academic profiles with emphasis on publications and education",
+    "template.bold": "Bold",
+    "template.boldDesc": "A strong and impactful design with high contrast",
 
     // Color Dialog
     "color.choose": "Theme Color",
+    "color.blue": "Blue",
+    "color.indigo": "Indigo",
+    "color.violet": "Violet",
+    "color.pink": "Pink",
+    "color.red": "Red",
+    "color.orange": "Orange",
+    "color.green": "Green",
+    "color.teal": "Teal",
+    "color.cyan": "Cyan",
+    "color.gray": "Gray",
+    "color.black": "Black",
 
     // CV Preview
     "cv.profile": "Profile",
@@ -668,6 +696,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.unsaved": "Sin guardar",
     "editor.zoom": "Zoom",
     "editor.newCvName": "Mi nuevo CV",
+    "editor.datePicker.placeholder": "Elegir una fecha",
 
     // Editor Tabs
     "editor.personal.showPhoto": "Usar una foto",
@@ -776,9 +805,22 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.techDesc": "Optimizado para perfiles IT/desarrolladores con sección de habilidades destacada",
     "template.academic": "Académico",
     "template.academicDesc": "Para investigadores y perfiles académicos con énfasis en publicaciones y educación",
+    "template.bold": "Audaz",
+    "template.boldDesc": "Un diseño fuerte e impactante con contrastes marcados",
 
     // Color Dialog
     "color.choose": "Color del tema",
+    "color.blue": "Azul",
+    "color.indigo": "Índigo",
+    "color.violet": "Violeta",
+    "color.pink": "Rosa",
+    "color.red": "Rojo",
+    "color.orange": "Naranja",
+    "color.green": "Verde",
+    "color.teal": "Teal",
+    "color.cyan": "Cian",
+    "color.gray": "Gris",
+    "color.black": "Negro",
 
     // CV Preview
     "cv.profile": "Perfil",
@@ -888,6 +930,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.color": "Farbe",
     "editor.unsaved": "Nicht gespeichert",
     "editor.newCvName": "Mein neuer Lebenslauf",
+    "editor.datePicker.placeholder": "Datum wählen",
 
     "editor.personal.showPhoto": "Ein Foto verwenden",
     "editor.personal.photo": "Foto-URL",
@@ -1036,8 +1079,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.techDesc": "Optimiert für IT/Entwickler-Profile mit hervorgehobener Fähigkeiten-Sektion",
     "template.academic": "Akademisch",
     "template.academicDesc": "Für Forscher und akademische Profile mit Schwerpunkt auf Publikationen und Ausbildung",
+    "template.bold": "Mutig",
+    "template.boldDesc": "Ein starkes und wirkungsvolles Design mit hohem Kontrast",
 
     "color.choose": "Themenfarbe",
+    "color.blue": "Blau",
+    "color.indigo": "Indigo",
+    "color.violet": "Violett",
+    "color.pink": "Rosa",
+    "color.red": "Rot",
+    "color.orange": "Orange",
+    "color.green": "Grün",
+    "color.teal": "Teal",
+    "color.cyan": "Cyan",
+    "color.gray": "Grau",
+    "color.black": "Schwarz",
 
     "editor.personal.linkedin": "LinkedIn",
     "editor.personal.github": "GitHub",
@@ -1160,6 +1216,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "editor.unsaved": "Niet opgeslagen",
     "editor.zoom": "Zoom",
     "editor.newCvName": "Mijn nieuwe CV",
+    "editor.datePicker.placeholder": "Kies een datum",
 
     // Editor Tabs
     "editor.personal.showPhoto": "Een foto gebruiken",
@@ -1268,9 +1325,22 @@ export const translations: Record<Language, Record<string, string>> = {
     "template.techDesc": "Geoptimaliseerd voor IT/ontwikkelaar profielen met uitgelichte vaardigheden sectie",
     "template.academic": "Academisch",
     "template.academicDesc": "Voor onderzoekers en academische profielen met nadruk op publicaties en opleiding",
+    "template.bold": "Gewaagd",
+    "template.boldDesc": "Een sterk en impactvol ontwerp met hoog contrast",
 
     // Color Dialog
     "color.choose": "Themakleur",
+    "color.blue": "Blauw",
+    "color.indigo": "Indigo",
+    "color.violet": "Violet",
+    "color.pink": "Roze",
+    "color.red": "Rood",
+    "color.orange": "Oranje",
+    "color.green": "Groen",
+    "color.teal": "Teal",
+    "color.cyan": "Cyaan",
+    "color.gray": "Grijs",
+    "color.black": "Zwart",
 
     // CV Preview
     "cv.profile": "Profiel",

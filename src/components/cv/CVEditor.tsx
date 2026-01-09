@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TagsInput } from "@/components/ui/tags-input";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   LuUser as User,
   LuBriefcase as Briefcase,
@@ -289,20 +290,18 @@ export function CVEditor() {
                     }
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    <Input
+                    <DatePicker
                       label={t("editor.experience.startDate")}
-                      type="month"
-                      value={exp.startDate}
-                      onChange={(e) =>
-                        updateExperience(exp.id, { startDate: e.target.value })
+                      date={exp.startDate}
+                      onChange={(date) =>
+                        updateExperience(exp.id, { startDate: date })
                       }
                     />
-                    <Input
+                    <DatePicker
                       label={t("editor.experience.endDate")}
-                      type="month"
-                      value={exp.endDate}
-                      onChange={(e) =>
-                        updateExperience(exp.id, { endDate: e.target.value })
+                      date={exp.endDate}
+                      onChange={(date) =>
+                        updateExperience(exp.id, { endDate: date })
                       }
                       disabled={exp.current}
                     />
@@ -389,20 +388,18 @@ export function CVEditor() {
                     }
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    <Input
+                    <DatePicker
                       label={t("editor.education.startDate")}
-                      type="month"
-                      value={edu.startDate}
-                      onChange={(e) =>
-                        updateEducation(edu.id, { startDate: e.target.value })
+                      date={edu.startDate}
+                      onChange={(date) =>
+                        updateEducation(edu.id, { startDate: date })
                       }
                     />
-                    <Input
+                    <DatePicker
                       label={t("editor.education.endDate")}
-                      type="month"
-                      value={edu.endDate}
-                      onChange={(e) =>
-                        updateEducation(edu.id, { endDate: e.target.value })
+                      date={edu.endDate}
+                      onChange={(date) =>
+                        updateEducation(edu.id, { endDate: date })
                       }
                       disabled={edu.current}
                     />
@@ -647,12 +644,11 @@ export function CVEditor() {
                       updateCertification(cert.id, { issuer: e.target.value })
                     }
                   />
-                  <Input
+                  <DatePicker
                     label={t("editor.certifications.date")}
-                    type="month"
-                    value={cert.date}
-                    onChange={(e) =>
-                      updateCertification(cert.id, { date: e.target.value })
+                    date={cert.date}
+                    onChange={(date) =>
+                      updateCertification(cert.id, { date: date })
                     }
                   />
                 </CardContent>

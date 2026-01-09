@@ -126,7 +126,7 @@ export function TemplateSwitcher() {
                   )}
                   style={{ backgroundColor: color.value }}
                 />
-                <span className="text-xs text-slate-600">{color.name}</span>
+                <span className="text-xs text-slate-600">{t(color.name)}</span>
               </button>
             ))}
           </div>
