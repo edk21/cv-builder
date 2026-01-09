@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { CVData } from "@/types/cv";
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { checkSubscriptionLimits } from "@/lib/subscriptionService";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { CVPDF } from "@/components/cv/CVPDF";
-import React from "react";
+import { generatePDFBuffer } from "@/lib/pdfGenerator";
+
+// Force Node.js runtime
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,24 +66,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate real PDF using @react-pdf/renderer
-    console.log("Generating PDF for CV:", cvData.id || "new", "Template:", cvData.templateId);
-    
-    try {
-      // We cast to any because renderToBuffer expects a specific ReactElement that matches DocumentProps
-      const buffer = await renderToBuffer(<CVPDF data={cvData} /> as any);
-      console.log("PDF generation successful, buffer size:", buffer.length);
+    // Generate PDF
+    console.log("Starting PDF generation...");
+    const buffer = await generatePDFBuffer(cvData);
+    console.log("PDF generated successfully, size:", buffer.length);
 
-      return new NextResponse(new Uint8Array(buffer), {
-        headers: {
-          "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="${encodeURIComponent(cvData.name || "cv")}.pdf"`,
-        },
-      });
-    } catch (renderError) {
-      console.error("React-PDF Rendering Error:", renderError);
-      throw renderError;
-    }
+    return new NextResponse(buffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${encodeURIComponent(cvData.name || "cv")}.pdf"`,
+        "Content-Length": buffer.length.toString(),
+      },
+    });
   } catch (error) {
     console.error("PDF API Route Error:", error);
     return NextResponse.json(

@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
-  turbopack: {
-    root: process.cwd(),
-  },
   async headers() {
     return [
       {
