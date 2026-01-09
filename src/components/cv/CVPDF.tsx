@@ -137,16 +137,18 @@ export const CVPDF = ({ data }: { data: CVData }) => {
         ) : null}
 
         {/* Experience */}
-        {experiences.length > 0 ? (
+        {(experiences && experiences.length > 0) ? (
           <View style={styles.section}>
             <Text style={sectionTitleStyle}>Expérience Professionnelle</Text>
             {experiences.map((exp, i) => (
               <View key={i} style={styles.item}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{exp.position}</Text>
-                  <Text style={styles.itemDate}>{exp.startDate} - {exp.current ? 'Présent' : exp.endDate}</Text>
+                  <Text style={styles.itemTitle}>{exp.position || 'Poste'}</Text>
+                  <Text style={styles.itemDate}>
+                    {(exp.startDate || '').toString()} - {exp.current ? 'Présent' : (exp.endDate || '').toString()}
+                  </Text>
                 </View>
-                <Text style={styles.itemSubtitle}>{exp.company}{exp.location ? ` | ${exp.location}` : ''}</Text>
+                <Text style={styles.itemSubtitle}>{exp.company || 'Entreprise'}{exp.location ? ` | ${exp.location}` : ''}</Text>
                 {exp.description ? <Text style={styles.description}>{exp.description}</Text> : null}
               </View>
             ))}
@@ -154,28 +156,30 @@ export const CVPDF = ({ data }: { data: CVData }) => {
         ) : null}
 
         {/* Education */}
-        {education.length > 0 ? (
+        {(education && education.length > 0) ? (
           <View style={styles.section}>
             <Text style={sectionTitleStyle}>Formation</Text>
             {education.map((edu, i) => (
               <View key={i} style={styles.item}>
                 <View style={styles.itemHeader}>
-                  <Text style={styles.itemTitle}>{edu.degree} {edu.field ? `en ${edu.field}` : ''}</Text>
-                  <Text style={styles.itemDate}>{edu.startDate} - {edu.current ? 'En cours' : edu.endDate}</Text>
+                  <Text style={styles.itemTitle}>{edu.degree || 'Diplôme'} {edu.field ? `en ${edu.field}` : ''}</Text>
+                  <Text style={styles.itemDate}>
+                    {(edu.startDate || '').toString()} - {edu.current ? 'En cours' : (edu.endDate || '').toString()}
+                  </Text>
                 </View>
-                <Text style={styles.itemSubtitle}>{edu.institution}{edu.location ? ` | ${edu.location}` : ''}</Text>
+                <Text style={styles.itemSubtitle}>{edu.institution || 'Établissement'}{edu.location ? ` | ${edu.location}` : ''}</Text>
               </View>
             ))}
           </View>
         ) : null}
 
         {/* Skills */}
-        {skills.length > 0 ? (
+        {(skills && skills.length > 0) ? (
           <View style={styles.section}>
             <Text style={sectionTitleStyle}>Compétences</Text>
             <View style={styles.skillsList}>
               {skills.map((skill, i) => (
-                <Text key={i} style={styles.skillTag}>{skill.name}</Text>
+                <Text key={i} style={styles.skillTag}>{skill.name || ''}</Text>
               ))}
             </View>
           </View>

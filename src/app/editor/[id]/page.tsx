@@ -277,9 +277,22 @@ export default function EditorPage({ params }: PageProps) {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+      } else {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          if (response.status === 403) {
+            alert(errorData.message || errorData.error || "Limite de téléchargement atteinte.");
+          } else {
+            alert(errorData.error || "Une erreur est survenue lors de la génération du PDF.");
+          }
+        } else {
+          alert(`Erreur (${response.status}): Impossible de générer le PDF.`);
+        }
       }
     } catch (error) {
       console.error("Error downloading PDF:", error);
+      alert("Une erreur de réseau est survenue. Veuillez vérifier votre connexion.");
     }
 
     setDownloading(false);

@@ -65,19 +65,30 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate real PDF using @react-pdf/renderer
-    // We cast to any because renderToBuffer expects a specific ReactElement that matches DocumentProps
-    const buffer = await renderToBuffer(<CVPDF data={cvData} /> as any);
+    console.log("Generating PDF for CV:", cvData.id || "new", "Template:", cvData.templateId);
+    
+    try {
+      // We cast to any because renderToBuffer expects a specific ReactElement that matches DocumentProps
+      const buffer = await renderToBuffer(<CVPDF data={cvData} /> as any);
+      console.log("PDF generation successful, buffer size:", buffer.length);
 
-    return new NextResponse(new Uint8Array(buffer), {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${cvData.name || "cv"}.pdf"`,
-      },
-    });
+      return new NextResponse(new Uint8Array(buffer), {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="${encodeURIComponent(cvData.name || "cv")}.pdf"`,
+        },
+      });
+    } catch (renderError) {
+      console.error("React-PDF Rendering Error:", renderError);
+      throw renderError;
+    }
   } catch (error) {
-    console.error("PDF Generation Error:", error);
+    console.error("PDF API Route Error:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la génération du PDF", details: error instanceof Error ? error.message : String(error) },
+      { 
+        error: "Erreur lors de la génération du PDF", 
+        details: error instanceof Error ? error.message : String(error) 
+      },
       { status: 500 }
     );
   }
