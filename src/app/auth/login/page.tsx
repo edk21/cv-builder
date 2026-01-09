@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,10 +11,24 @@ import { LuFileText as FileText, LuLoader as Loader2, LuMail as Mail, LuLock as 
 import { createClient } from "@/lib/supabaseClient";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("/dashboard");
+
+  useEffect(() => {
+    // Déterminer l'URL de redirection
+    const redirect = searchParams.get('redirect');
+    const savedRedirect = localStorage.getItem('cvDraftRedirect');
+    
+    if (redirect === 'editor' && savedRedirect) {
+      setRedirectUrl(savedRedirect);
+    } else if (redirect === 'editor') {
+      setRedirectUrl('/editor/new');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +50,7 @@ export default function LoginPage() {
 
       if (data.session) {
         // Use window.location for a full page reload to ensure cookies are properly set
-        window.location.href = "/dashboard";
+        window.location.href = redirectUrl;
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -66,6 +81,12 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {searchParams.get('redirect') === 'editor' && (
+                <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-sm">
+                  📝 Connectez-vous pour sauvegarder votre CV. Vos données seront automatiquement restaurées !
+                </div>
+              )}
+              
               {error && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                   {error}
@@ -130,7 +151,7 @@ export default function LoginPage() {
             <p className="text-center text-sm text-muted-foreground">
               Pas encore de compte ?{" "}
               <Link
-                href="/auth/signup"
+                href={searchParams.get('redirect') === 'editor' ? "/auth/signup?redirect=editor" : "/auth/signup"}
                 className="text-blue-600 hover:underline font-medium"
               >
                 Créer un compte

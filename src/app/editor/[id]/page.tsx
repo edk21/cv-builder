@@ -77,6 +77,30 @@ export default function EditorPage({ params }: PageProps) {
         setUser({ id: authUser.id, email: authUser.email || "" });
       }
 
+      // Vérifier s'il y a un brouillon de CV sauvegardé (après connexion)
+      const cvDraft = localStorage.getItem('cvDraft');
+      const cvDraftRedirect = localStorage.getItem('cvDraftRedirect');
+      
+      if (cvDraft && authUser) {
+        try {
+          const draftData = JSON.parse(cvDraft);
+          // Supprimer savedAt qui n'est pas dans le type CVData
+          delete draftData.savedAt;
+          loadCVData(draftData);
+          setDirty(true); // Marquer comme non sauvegardé pour inciter à sauvegarder
+          
+          // Nettoyer le localStorage
+          localStorage.removeItem('cvDraft');
+          localStorage.removeItem('cvDraftRedirect');
+          
+          setLoading(false);
+          return;
+        } catch (error) {
+          console.error("Error loading draft CV:", error);
+          // Continue avec le flux normal si erreur
+        }
+      }
+
       if (id === "new") {
         // Get translation without adding dependency to avoid re-running on language change
         const translate = useLanguageStore.getState().t;
@@ -154,7 +178,14 @@ export default function EditorPage({ params }: PageProps) {
       return;
     }
     if (!user) {
-      router.push("/auth/login");
+      // Sauvegarder le CV dans localStorage avant de rediriger vers login
+      const cvDraft = {
+        ...cvData,
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('cvDraft', JSON.stringify(cvDraft));
+      localStorage.setItem('cvDraftRedirect', window.location.pathname);
+      router.push("/auth/login?redirect=editor");
       return;
     }
 
@@ -252,7 +283,14 @@ export default function EditorPage({ params }: PageProps) {
     }
 
     if (!user) {
-      router.push("/auth/login");
+      // Sauvegarder le CV dans localStorage avant de rediriger vers login
+      const cvDraft = {
+        ...cvData,
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('cvDraft', JSON.stringify(cvDraft));
+      localStorage.setItem('cvDraftRedirect', window.location.pathname);
+      router.push("/auth/login?redirect=editor");
       return;
     }
 

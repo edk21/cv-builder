@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { createClient } from "@/lib/supabaseClient";
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +21,13 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [hasRedirect, setHasRedirect] = useState(false);
+
+  useEffect(() => {
+    // Vérifier si l'utilisateur vient de l'éditeur
+    const redirect = searchParams.get('redirect');
+    setHasRedirect(redirect === 'editor');
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +88,11 @@ export default function SignupPage() {
               Nous avons envoyé un lien de confirmation à <strong>{email}</strong>.
               Cliquez sur le lien pour activer votre compte.
             </p>
-            <Button onClick={() => router.push("/auth/login")} variant="outline" className="w-full">
+            <Button 
+              onClick={() => router.push(hasRedirect ? "/auth/login?redirect=editor" : "/auth/login")} 
+              variant="outline" 
+              className="w-full"
+            >
               Retour à la connexion
             </Button>
           </CardContent>
@@ -110,6 +123,12 @@ export default function SignupPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {hasRedirect && (
+                <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-sm">
+                  📝 Créez votre compte pour sauvegarder votre CV. Vos données seront automatiquement restaurées après confirmation de votre email !
+                </div>
+              )}
+              
               {error && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                   {error}
