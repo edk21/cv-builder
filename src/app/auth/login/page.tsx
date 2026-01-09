@@ -1,16 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LuFileText as FileText, LuLoader as Loader2, LuMail as Mail, LuLock as Lock } from "react-icons/lu";
+import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabaseClient";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import * as React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { LuFileText as FileText, LuLoader as Loader2, LuLock as Lock, LuMail as Mail } from "react-icons/lu";
 
-export default function LoginPage() {
+function LoginFormContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +22,7 @@ export default function LoginPage() {
     // Déterminer l'URL de redirection
     const redirect = searchParams.get('redirect');
     const savedRedirect = localStorage.getItem('cvDraftRedirect');
-    
+
     if (redirect === 'editor' && savedRedirect) {
       setRedirectUrl(savedRedirect);
     } else if (redirect === 'editor') {
@@ -86,7 +86,7 @@ export default function LoginPage() {
                   📝 Connectez-vous pour sauvegarder votre CV. Vos données seront automatiquement restaurées !
                 </div>
               )}
-              
+
               {error && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                   {error}
@@ -173,5 +173,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginFormContent />
+    </Suspense>
   );
 }

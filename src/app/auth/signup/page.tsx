@@ -1,17 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LuFileText as FileText, LuLoader as Loader2, LuMail as Mail, LuLock as Lock, LuUser as User } from "react-icons/lu";
+import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabaseClient";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import * as React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { LuFileText as FileText, LuLoader as Loader2, LuLock as Lock, LuMail as Mail, LuUser as User } from "react-icons/lu";
 
-export default function SignupPage() {
+function SignupFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [name, setName] = useState("");
@@ -88,9 +87,9 @@ export default function SignupPage() {
               Nous avons envoyé un lien de confirmation à <strong>{email}</strong>.
               Cliquez sur le lien pour activer votre compte.
             </p>
-            <Button 
-              onClick={() => router.push(hasRedirect ? "/auth/login?redirect=editor" : "/auth/login")} 
-              variant="outline" 
+            <Button
+              onClick={() => router.push(hasRedirect ? "/auth/login?redirect=editor" : "/auth/login")}
+              variant="outline"
               className="w-full"
             >
               Retour à la connexion
@@ -128,7 +127,7 @@ export default function SignupPage() {
                   📝 Créez votre compte pour sauvegarder votre CV. Vos données seront automatiquement restaurées après confirmation de votre email !
                 </div>
               )}
-              
+
               {error && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                   {error}
@@ -231,3 +230,10 @@ export default function SignupPage() {
   );
 }
 
+export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupFormContent />
+    </Suspense>
+  );
+}
