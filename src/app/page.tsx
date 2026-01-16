@@ -198,24 +198,83 @@ export default function HomePage() {
                 <div className="w-3 h-3 rounded-full bg-yellow-400" />
                 <div className="w-3 h-3 rounded-full bg-green-400" />
               </div>
-              <div className="p-8 grid grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <div className="h-8 bg-slate-200 rounded-lg w-3/4 animate-pulse" />
-                  <div className="h-4 bg-slate-100 rounded w-full" />
-                  <div className="h-4 bg-slate-100 rounded w-5/6" />
-                  <div className="h-4 bg-slate-100 rounded w-4/6" />
-                  <div className="mt-6 h-6 bg-blue-100 rounded-lg w-1/2" />
-                  <div className="h-4 bg-slate-100 rounded w-full" />
-                  <div className="h-4 bg-slate-100 rounded w-3/4" />
+              <div className="p-8 grid grid-cols-2 gap-8 text-[11px] leading-5">
+                <div className="space-y-5">
+                  <div>
+                    <div className="text-lg font-semibold text-slate-900">Camille Morel</div>
+                    <div className="text-slate-500">UX Designer • Paris</div>
+                    <div className="mt-2 text-slate-400">
+                      camille.morel@mail.com • +33 6 12 34 56 78 • camille.design
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                      Profil
+                    </div>
+                    <p className="text-slate-600">
+                      Passionnée par la création d’expériences claires et accessibles, je
+                      conçois des interfaces élégantes avec une approche centrée utilisateur.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                      Expérience
+                    </div>
+                    <div>
+                      <div className="text-slate-900 font-medium">
+                        Product Designer • Studio Atlas
+                      </div>
+                      <div className="text-slate-500">2022 — Aujourd’hui</div>
+                      <div className="text-slate-600">
+                        Refonte du parcours d’inscription, +28% de conversion.
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-slate-900 font-medium">
+                        UI/UX Designer • WaveLab
+                      </div>
+                      <div className="text-slate-500">2019 — 2022</div>
+                      <div className="text-slate-600">
+                        Création d’un design system modulaire pour 4 produits.
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-6 space-y-4">
-                  <div className="h-6 bg-blue-500 rounded w-1/2" />
-                  <div className="h-3 bg-slate-200 rounded w-full" />
-                  <div className="h-3 bg-slate-200 rounded w-5/6" />
-                  <div className="h-3 bg-slate-200 rounded w-4/6" />
-                  <div className="mt-4 h-5 bg-blue-400 rounded w-2/5" />
-                  <div className="h-3 bg-slate-200 rounded w-full" />
-                  <div className="h-3 bg-slate-200 rounded w-3/4" />
+                <div className="bg-slate-50 rounded-xl p-6 space-y-5">
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                      Compétences
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2 text-slate-600">
+                      <span className="px-2 py-0.5 rounded bg-white border border-slate-200">
+                        Figma
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-white border border-slate-200">
+                        Design system
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-white border border-slate-200">
+                        Prototypage
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-white border border-slate-200">
+                        Recherche utilisateur
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                      Formation
+                    </div>
+                    <div className="text-slate-600">
+                      Master Design Numérique • ENSCI
+                    </div>
+                    <div className="text-slate-500">2017 — 2019</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                      Langues
+                    </div>
+                    <div className="text-slate-600">Français (natif), Anglais (C1)</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -225,7 +284,6 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative">
-        <a id="features" className="absolute -top-24" />
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
@@ -256,7 +314,6 @@ export default function HomePage() {
 
       {/* How it works */}
       <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-slate-50 relative">
-        <a id="how-it-works" className="absolute -top-24" />
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">

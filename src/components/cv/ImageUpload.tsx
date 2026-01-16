@@ -77,6 +77,15 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         onClick={() => fileInputRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={t("editor.personal.photo.dropzone") || "Ajouter une photo"}
       >
         <input
           type="file"

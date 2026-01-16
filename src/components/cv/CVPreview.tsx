@@ -1096,12 +1096,24 @@ export function CVPreview() {
                         <h3 className="font-bold text-slate-900">{project.name || t("cv.placeholder.project")}</h3>
                         <div className="flex gap-2">
                           {project.url && (
-                             <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-800">
+                             <a
+                               href={project.url}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-slate-400 hover:text-slate-800"
+                               aria-label={`Demo de ${project.name || t("cv.placeholder.project")}`}
+                             >
                                <Globe className="w-4 h-4" />
                              </a>
                           )}
                           {project.github && (
-                             <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-800">
+                             <a
+                               href={project.github}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-slate-400 hover:text-slate-800"
+                               aria-label={`Depot GitHub de ${project.name || t("cv.placeholder.project")}`}
+                             >
                                <Github className="w-4 h-4" />
                              </a>
                           )}

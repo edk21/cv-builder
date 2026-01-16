@@ -30,6 +30,7 @@ export interface DatePickerProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  id?: string;
 }
 
 export function DatePicker({
@@ -39,10 +40,13 @@ export function DatePicker({
   placeholder,
   disabled,
   className,
+  id,
 }: DatePickerProps) {
   const { t, language } = useTranslation();
   const currentLocale = locales[language as keyof typeof locales] || fr;
   const defaultPlaceholder = t("editor.datePicker.placeholder");
+  const triggerId = id ?? React.useId();
+  const labelId = `${triggerId}-label`;
 
   // Parse the date string safely
   const selectedDate = React.useMemo(() => {
@@ -72,7 +76,7 @@ export function DatePicker({
   return (
     <div className={cn("space-y-1.5", className)}>
       {label && (
-        <label className="text-sm font-medium text-foreground">
+        <label className="text-sm font-medium text-foreground" id={labelId} htmlFor={triggerId}>
           {label}
         </label>
       )}
@@ -85,6 +89,8 @@ export function DatePicker({
               "w-full justify-start text-left font-normal h-10 px-3 py-2",
               !date && "text-muted-foreground"
             )}
+            id={triggerId}
+            aria-labelledby={label ? labelId : undefined}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {selectedDate ? (

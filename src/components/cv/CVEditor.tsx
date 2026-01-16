@@ -258,6 +258,7 @@ export function CVEditor() {
                     size="icon"
                     className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                     onClick={() => removeExperience(exp.id)}
+                    aria-label={`Supprimer l'expérience ${index + 1}`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -348,6 +349,7 @@ export function CVEditor() {
                     size="icon"
                     className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                     onClick={() => removeEducation(edu.id)}
+                    aria-label={`Supprimer la formation ${index + 1}`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -469,6 +471,7 @@ export function CVEditor() {
                       size="icon"
                       className="h-10 w-10 text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0"
                       onClick={() => removeSkill(skill.id)}
+                      aria-label={`Supprimer la compétence ${skill.name || ""}`.trim()}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -498,6 +501,7 @@ export function CVEditor() {
                     size="icon"
                     className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                     onClick={() => removeProject(project.id)}
+                    aria-label={`Supprimer le projet ${index + 1}`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -594,6 +598,7 @@ export function CVEditor() {
                       size="icon"
                       className="h-10 w-10 text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0"
                       onClick={() => removeLanguage(lang.id)}
+                      aria-label={`Supprimer la langue ${lang.name || ""}`.trim()}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -623,6 +628,7 @@ export function CVEditor() {
                     size="icon"
                     className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                     onClick={() => removeCertification(cert.id)}
+                    aria-label={`Supprimer la certification ${index + 1}`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

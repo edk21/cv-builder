@@ -10,11 +10,17 @@ export interface TextareaProps
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, label, error, ...props }, ref) => {
+  ({ className, label, error, id, ...props }, ref) => {
+    const textareaId = id ?? React.useId();
+    const errorId = error ? `${textareaId}-error` : undefined;
+    const describedBy = [props["aria-describedby"], errorId]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="text-sm font-medium text-foreground">
+          <label className="text-sm font-medium text-foreground" htmlFor={textareaId}>
             {label}
           </label>
         )}
@@ -25,10 +31,15 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             className
           )}
           ref={ref}
+          id={textareaId}
+          aria-invalid={error ? true : props["aria-invalid"]}
+          aria-describedby={describedBy}
           {...props}
         />
         {error && (
-          <p className="text-xs text-destructive">{error}</p>
+          <p className="text-xs text-destructive" id={errorId}>
+            {error}
+          </p>
         )}
       </div>
     );

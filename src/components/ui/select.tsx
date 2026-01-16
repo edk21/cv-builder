@@ -12,11 +12,17 @@ export interface SelectProps
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, label, error, options, ...props }, ref) => {
+  ({ className, label, error, options, id, ...props }, ref) => {
+    const selectId = id ?? React.useId();
+    const errorId = error ? `${selectId}-error` : undefined;
+    const describedBy = [props["aria-describedby"], errorId]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="text-sm font-medium text-foreground">
+          <label className="text-sm font-medium text-foreground" htmlFor={selectId}>
             {label}
           </label>
         )}
@@ -28,6 +34,9 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               className
             )}
             ref={ref}
+            id={selectId}
+            aria-invalid={error ? true : props["aria-invalid"]}
+            aria-describedby={describedBy}
             {...props}
           >
             {options.map((option) => (
@@ -39,7 +48,9 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         </div>
         {error && (
-          <p className="text-xs text-destructive">{error}</p>
+          <p className="text-xs text-destructive" id={errorId}>
+            {error}
+          </p>
         )}
       </div>
     );
