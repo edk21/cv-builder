@@ -55,10 +55,19 @@ export async function generatePDFBuffer(cvData: CVData): Promise<Buffer> {
     const contactInfo: string[] = [];
     if (personalInfo.email) contactInfo.push(personalInfo.email);
     if (personalInfo.phone) contactInfo.push(personalInfo.phone);
-    if (personalInfo.address) contactInfo.push(personalInfo.address);
+    const locationText = [personalInfo.city, personalInfo.country].filter(Boolean).join(', ');
+    if (locationText) {
+      contactInfo.push(locationText);
+    } else if (personalInfo.address) {
+      contactInfo.push(personalInfo.address);
+    }
+    if (personalInfo.linkedin) contactInfo.push(personalInfo.linkedin);
+    if (personalInfo.github) contactInfo.push(personalInfo.github);
+    if (personalInfo.website) contactInfo.push(personalInfo.website);
     if (contactInfo.length > 0) {
-      doc.text(contactInfo.join(' • '), margin, yPosition);
-      yPosition += 6;
+      const contactLines = doc.splitTextToSize(contactInfo.join(' • '), pageWidth - 2 * margin);
+      doc.text(contactLines, margin, yPosition);
+      yPosition += contactLines.length * 5 + 1;
     }
     
     // Line under header
