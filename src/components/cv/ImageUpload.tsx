@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useRef } from "react";
 import { useTranslation } from "@/store/languageStore";
 import { FiUpload, FiX, FiImage } from "react-icons/fi";
@@ -98,10 +99,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
         {value ? (
           <div className="absolute inset-0 w-full h-full">
-            <img
+            <Image
               src={value}
               alt="Profile"
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <p className="text-white text-sm font-medium">

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import { useCVStore } from "@/store/cvStore";
 import { useTranslation } from "@/store/languageStore";
@@ -39,8 +40,15 @@ export function CVPreview() {
               )}
             </div>
             {personalInfo.showPhoto !== false && personalInfo.photo && (
-              <div className="w-24 h-24 rounded-lg overflow-hidden border-2 border-(--theme-color) ml-4 shrink-0">
-                <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+              <div className="w-24 h-24 rounded-lg overflow-hidden border-2 border-(--theme-color) ml-4 shrink-0 relative">
+                <Image
+                  src={personalInfo.photo}
+                  alt="Profile"
+                  fill
+                  sizes="96px"
+                  className="object-cover"
+                  unoptimized
+                />
               </div>
             )}
           </div>
@@ -267,8 +275,15 @@ export function CVPreview() {
         {/* Header - Centré et épuré */}
         <header className="text-center mb-12">
           {personalInfo.showPhoto !== false && personalInfo.photo && (
-            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border border-slate-200">
-              <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border border-slate-200 relative">
+              <Image
+                src={personalInfo.photo}
+                alt="Profile"
+                fill
+                sizes="96px"
+                className="object-cover"
+                unoptimized
+              />
             </div>
           )}
           <h1 className="text-4xl font-light tracking-wide mb-2">
@@ -464,8 +479,15 @@ export function CVPreview() {
           {/* Photo */}
           {personalInfo.showPhoto !== false && personalInfo.photo && (
             <div className="mb-6">
-              <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-white/50 mx-auto">
-                <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+              <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-white/50 mx-auto relative">
+                <Image
+                  src={personalInfo.photo}
+                  alt="Profile"
+                  fill
+                  sizes="128px"
+                  className="object-cover"
+                  unoptimized
+                />
               </div>
             </div>
           )}
@@ -750,8 +772,15 @@ export function CVPreview() {
           <div className="flex items-start justify-between">
             <div className="flex flex-row items-center gap-4">
               {personalInfo.showPhoto !== false && personalInfo.photo && (
-                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-(--theme-color) shadow-lg shrink-0">
-                  <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover" />
+                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-(--theme-color) shadow-lg shrink-0 relative">
+                  <Image
+                    src={personalInfo.photo}
+                    alt="Profile"
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                    unoptimized
+                  />
                 </div>
               )}
               <div>
@@ -984,8 +1013,15 @@ export function CVPreview() {
           <div className="flex justify-between items-start">
             <div className="flex flex-row items-center gap-6">
               {personalInfo.showPhoto !== false && personalInfo.photo && (
-                <div className="w-20 h-20 overflow-hidden border border-[#4ade80] shadow-[0_0_10px_rgba(74,222,128,0.3)] shrink-0">
-                  <img src={personalInfo.photo} alt="Profile" className="w-full h-full object-cover grayscale brightness-110 contrast-125" />
+                <div className="w-20 h-20 overflow-hidden border border-[#4ade80] shadow-[0_0_10px_rgba(74,222,128,0.3)] shrink-0 relative">
+                  <Image
+                    src={personalInfo.photo}
+                    alt="Profile"
+                    fill
+                    sizes="80px"
+                    className="object-cover grayscale brightness-110 contrast-125"
+                    unoptimized
+                  />
                 </div>
               )}
               <div>
