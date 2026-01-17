@@ -78,19 +78,40 @@ export function CVPreview() {
             {personalInfo.linkedin && (
               <div className="flex items-center gap-1">
                 <Linkedin className="w-3.5 h-3.5" />
-                <span>LinkedIn</span>
+                <a
+                  href={personalInfo.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline break-all"
+                >
+                  {personalInfo.linkedin}
+                </a>
               </div>
             )}
             {personalInfo.github && (
               <div className="flex items-center gap-1">
                 <Github className="w-3.5 h-3.5" />
-                <span>GitHub</span>
+                <a
+                  href={personalInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline break-all"
+                >
+                  {personalInfo.github}
+                </a>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center gap-1">
                 <Globe className="w-3.5 h-3.5" />
-                <span>Portfolio</span>
+                <a
+                  href={personalInfo.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline break-all"
+                >
+                  {personalInfo.website}
+                </a>
               </div>
             )}
           </div>
@@ -534,19 +555,40 @@ export function CVPreview() {
               {personalInfo.linkedin && (
                 <div className="flex items-center gap-2">
                   <Linkedin className="w-3.5 h-3.5 opacity-75" />
-                  <span className="break-all">LinkedIn</span>
+                  <a
+                    href={personalInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="break-all hover:underline"
+                  >
+                    {personalInfo.linkedin}
+                  </a>
                 </div>
               )}
               {personalInfo.github && (
                 <div className="flex items-center gap-2">
                   <Github className="w-3.5 h-3.5 opacity-75" />
-                  <span className="break-all">GitHub</span>
+                  <a
+                    href={personalInfo.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="break-all hover:underline"
+                  >
+                    {personalInfo.github}
+                  </a>
                 </div>
               )}
               {personalInfo.website && (
                 <div className="flex items-center gap-2">
                   <Globe className="w-3.5 h-3.5 opacity-75" />
-                  <span className="break-all">Portfolio</span>
+                  <a
+                    href={personalInfo.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="break-all hover:underline"
+                  >
+                    {personalInfo.website}
+                  </a>
                 </div>
               )}
             </div>
@@ -1059,19 +1101,43 @@ export function CVPreview() {
               )}
               {personalInfo.website && (
                 <div className="flex items-center justify-end gap-2">
-                  <a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="Portfolio">Portfolio</a>
+                  <a
+                    href={personalInfo.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-green-400 break-all"
+                    aria-label={personalInfo.website}
+                  >
+                    {personalInfo.website}
+                  </a>
                   <Globe className="w-3 h-3" />
                 </div>
               )}
               {personalInfo.github && (
                 <div className="flex items-center justify-end gap-2">
-                  <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="GitHub">GitHub</a>
+                  <a
+                    href={personalInfo.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-green-400 break-all"
+                    aria-label={personalInfo.github}
+                  >
+                    {personalInfo.github}
+                  </a>
                   <Github className="w-3 h-3" />
                 </div>
               )}
               {personalInfo.linkedin && (
                 <div className="flex items-center justify-end gap-2">
-                  <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-green-400" aria-label="LinkedIn">LinkedIn</a>
+                  <a
+                    href={personalInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-green-400 break-all"
+                    aria-label={personalInfo.linkedin}
+                  >
+                    {personalInfo.linkedin}
+                  </a>
                   <Linkedin className="w-3 h-3" />
                 </div>
               )}
