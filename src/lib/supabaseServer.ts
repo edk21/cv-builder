@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import type { CookieOptions, SetAllCookies } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export async function createServerSupabaseClient() {
@@ -12,12 +13,10 @@ export async function createServerSupabaseClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(
-          cookiesToSet: Array<{ name: string; value: string; options?: any }>
-        ) {
+        setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cookieStore.set(name, value, normalizeOptions(options))
             );
           } catch {
             // Server Component - cookies are read-only
@@ -26,4 +25,19 @@ export async function createServerSupabaseClient() {
       },
     }
   );
+}
+
+function normalizeOptions(options?: CookieOptions) {
+  if (!options) return undefined;
+  if (options.sameSite === undefined) return options;
+  return {
+    ...options,
+    sameSite: normalizeSameSite(options),
+  };
+}
+
+function normalizeSameSite(options: CookieOptions) {
+  if (options.sameSite === true) return "strict";
+  if (options.sameSite === false) return undefined;
+  return options.sameSite;
 }

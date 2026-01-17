@@ -217,7 +217,7 @@ function SignupFormContent() {
         <p className="text-center text-xs text-muted-foreground mt-6">
           En créant un compte, vous acceptez nos{" "}
           <Link href="/terms" className="underline hover:text-foreground">
-            conditions d'utilisation
+            conditions d&apos;utilisation
           </Link>{" "}
           et notre{" "}
           <Link href="/privacy" className="underline hover:text-foreground">

@@ -84,7 +84,7 @@ const DialogOverlay = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in-0 duration-200",
+        "fixed inset-0 z-50 bg-black/50 backdrop-blur-xs animate-in fade-in-0 duration-200",
         className
       )}
       onClick={() => setOpen(false)}
@@ -114,7 +114,7 @@ const DialogContent = React.forwardRef<
       >
         {children}
         <button
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
           onClick={() => setOpen(false)}
         >
           <X className="h-4 w-4" />

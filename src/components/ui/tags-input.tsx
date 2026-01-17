@@ -111,7 +111,7 @@ export function TagsInput({
           id={inputId}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className="flex-1 min-w-[120px] bg-transparent outline-none placeholder:text-muted-foreground"
+          className="flex-1 min-w-[120px] bg-transparent outline-hidden placeholder:text-muted-foreground"
         />
       </div>
       {error && (

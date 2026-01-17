@@ -19,7 +19,7 @@ import {
 import { useCVStore } from "@/store/cvStore";
 import { useTranslation, useLanguageStore } from "@/store/languageStore";
 import { createClient } from "@/lib/supabaseClient";
-import { defaultCVData } from "@/types/cv";
+import { CVData, defaultCVData } from "@/types/cv";
 import { translations } from "@/lib/i18n/translations";
 import {
   LuCircleAlert as AlertCircle,
@@ -149,12 +149,14 @@ export default function EditorPage({ params }: PageProps) {
         try {
           const response = await fetch("/api/cv");
           if (response.ok) {
-            const allCVs = await response.json();
+            const allCVs = (await response.json()) as CVData[];
             // Sort by creation date to find the index
-            const sortedCVs = allCVs.sort((a: any, b: any) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            const sortedCVs = [...allCVs].sort(
+              (a, b) =>
+                new Date(a.createdAt ?? 0).getTime() -
+                new Date(b.createdAt ?? 0).getTime()
             );
-            const cvIndex = sortedCVs.findIndex((cv: any) => cv.id === cvData.id);
+            const cvIndex = sortedCVs.findIndex((cv) => cv.id === cvData.id);
             // If index > 1 (not the first or second CV), it's in preview mode
             setIsPreviewMode(cvIndex > 1);
           }
@@ -355,7 +357,7 @@ export default function EditorPage({ params }: PageProps) {
             </Button>
           </Link>
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
               <FileText className="w-4 h-4 text-white" />
             </div>
           </Link>
@@ -490,7 +492,7 @@ export default function EditorPage({ params }: PageProps) {
         {/* Right Panel - Preview */}
         <div className="flex-1 bg-slate-200 overflow-auto relative">
           {/* Zoom Controls */}
-          <div className="sticky top-4 left-4 z-10 flex items-center gap-2 bg-white rounded-lg shadow-sm border border-slate-200 p-1">
+          <div className="sticky top-4 left-4 z-10 flex items-center gap-2 bg-white rounded-lg shadow-xs border border-slate-200 p-1">
             <Button
               variant="ghost"
               size="icon"

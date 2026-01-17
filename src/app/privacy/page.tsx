@@ -8,10 +8,10 @@ export default function PrivacyPage() {
       <div className="max-w-3xl mx-auto">
         <Link href="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Retour à l'accueil
+          Retour à l&apos;accueil
         </Link>
         
-        <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+        <div className="bg-white rounded-2xl p-8 shadow-xs border border-slate-200">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
@@ -39,21 +39,21 @@ export default function PrivacyPage() {
             <section className="mb-8">
               <h2 className="text-xl font-semibold text-slate-800 mb-3">3. Protection des données</h2>
               <p className="text-slate-600">
-                Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification ou divulgation non autorisés. Pour l'authentification et le stockage, nous utilisons Supabase, un service sécurisé de confiance.
+                Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification ou divulgation non autorisés. Pour l&apos;authentification et le stockage, nous utilisons Supabase, un service sécurisé de confiance.
               </p>
             </section>
             
             <section className="mb-8">
               <h2 className="text-xl font-semibold text-slate-800 mb-3">4. Partage avec des tiers</h2>
               <p className="text-slate-600">
-                Nous ne vendons ni ne louons vos données personnelles à des tiers. Vos informations ne sont partagées que si nécessaire pour fournir le service ou si la loi l'exige.
+                Nous ne vendons ni ne louons vos données personnelles à des tiers. Vos informations ne sont partagées que si nécessaire pour fournir le service ou si la loi l&apos;exige.
               </p>
             </section>
             
             <section className="mb-8">
               <h2 className="text-xl font-semibold text-slate-800 mb-3">5. Vos droits</h2>
               <p className="text-slate-600">
-                Vous avez le droit d'accéder à vos données personnelles, de les rectifier ou de les supprimer à tout moment via les paramètres de votre compte ou en nous contactant.
+                Vous avez le droit d&apos;accéder à vos données personnelles, de les rectifier ou de les supprimer à tout moment via les paramètres de votre compte ou en nous contactant.
               </p>
             </section>
             

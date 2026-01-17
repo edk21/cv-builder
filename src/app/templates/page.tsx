@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -197,7 +197,7 @@ export default function TemplatesPage() {
   // Generate realistic preview based on template type
   const getTemplatePreview = (templateId: string) => {
     const data = getPreviewData(templateId);
-    const previews: Record<string, JSX.Element> = {
+    const previews: Record<string, ReactElement> = {
       modern: (
         <div className="grid grid-cols-3 gap-3 h-full text-[10px] leading-4">
           <div className="col-span-1 bg-slate-800 p-3 space-y-3 text-slate-200">
@@ -423,15 +423,15 @@ export default function TemplatesPage() {
             <div className="text-slate-300">{data.title}</div>
           </div>
           <div className="p-4 space-y-3">
-            <div className="bg-white p-2 rounded shadow-sm space-y-1">
+            <div className="bg-white p-2 rounded shadow-xs space-y-1">
               <div className="text-[9px] uppercase tracking-wide text-slate-600">
                 Leadership
               </div>
               <div className="text-slate-700">
-                Pilotage d'equipes produit et delivery.
+                Pilotage d&apos;equipes produit et delivery.
               </div>
             </div>
-            <div className="bg-white p-2 rounded shadow-sm space-y-1">
+            <div className="bg-white p-2 rounded shadow-xs space-y-1">
               <div className="text-[9px] uppercase tracking-wide text-slate-600">
                 Impact
               </div>
@@ -526,7 +526,7 @@ export default function TemplatesPage() {
               Recherche
             </div>
             <div className="pl-2 text-slate-700">
-              Article: "Human factors in UX"
+              Article: &quot;Human factors in UX&quot;
             </div>
             <div className="pl-2 text-slate-500 italic">
               Conf. HCI 2023, Paris
@@ -656,7 +656,7 @@ export default function TemplatesPage() {
                   {/* Template Preview */}
                   <div className="aspect-[210/297] relative overflow-hidden border-b-2 border-slate-200">
                     {getTemplatePreview(template.id)}
-                    <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-sm">
+                    <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-medium text-slate-600 shadow-xs">
                       {template.category.charAt(0).toUpperCase() + template.category.slice(1)}
                     </div>
                   </div>

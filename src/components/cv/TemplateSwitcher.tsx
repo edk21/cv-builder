@@ -68,14 +68,14 @@ export function TemplateSwitcher() {
                   </div>
                 )}
                 {/* Template Preview */}
-                <div className="aspect-[210/297] bg-slate-100 rounded-lg mb-3 overflow-hidden">
+                <div className="aspect-210/297 bg-slate-100 rounded-lg mb-3 overflow-hidden">
                   <div className="w-full h-full p-3 space-y-2">
                     <div
-                      className="h-2 rounded w-1/2 bg-[color:var(--theme-color)]"
+                      className="h-2 rounded w-1/2 bg-(--theme-color)"
                     />
                     <div className="h-1.5 bg-slate-200 rounded w-3/4" />
                     <div className="h-1.5 bg-slate-200 rounded w-2/3" />
-                    <div className="mt-2 h-1.5 rounded w-1/3 bg-[color:var(--theme-color)]/50" />
+                    <div className="mt-2 h-1.5 rounded w-1/3 bg-(--theme-color)/50" />
                     <div className="h-1.5 bg-slate-200 rounded w-full" />
                     <div className="h-1.5 bg-slate-200 rounded w-5/6" />
                   </div>
@@ -95,7 +95,7 @@ export function TemplateSwitcher() {
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
             <div
-              className="w-4 h-4 rounded-full border border-slate-200 bg-[color:var(--theme-color)]"
+              className="w-4 h-4 rounded-full border border-slate-200 bg-(--theme-color)"
             />
             {t("editor.color")}
           </Button>
@@ -121,7 +121,7 @@ export function TemplateSwitcher() {
               >
                 <div
                   className={cn(
-                    "w-10 h-10 rounded-full shadow-sm",
+                    "w-10 h-10 rounded-full shadow-xs",
                     cvData.themeColor === color.value && "ring-2 ring-offset-2 ring-slate-900"
                   )}
                   style={{ backgroundColor: color.value }}

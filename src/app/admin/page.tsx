@@ -260,7 +260,7 @@ export default function AdminPage() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Gestion des utilisateurs</h1>
             <p className="text-slate-600 mt-1">
-              Visualisez et gérez tous les utilisateurs de l'application
+              Visualisez et gérez tous les utilisateurs de l&apos;application
             </p>
           </div>
           <Button onClick={handleRefresh} variant="outline">

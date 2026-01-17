@@ -263,10 +263,10 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
                 <FileText className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="font-bold text-xl bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 CV Crafter
               </span>
             </Link>
@@ -344,10 +344,10 @@ export default function DashboardPage() {
 
         {/* Subscription Status Banner (for free users) */}
         {!isPremium && (
-          <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+          <div className="mb-6 bg-linear-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Crown className="w-5 h-5 text-purple-600" />
                 </div>
                 <div>
@@ -362,7 +362,7 @@ export default function DashboardPage() {
                   setUpgradeReason("create");
                   setUpgradeModalOpen(true);
                 }}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
                 Passer à Premium
@@ -379,7 +379,7 @@ export default function DashboardPage() {
             placeholder="Rechercher un CV..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-80 h-10 pl-10 pr-4 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full sm:w-80 h-10 pl-10 pr-4 rounded-lg border border-slate-200 bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -477,7 +477,7 @@ export default function DashboardPage() {
                 <CardContent>
                   {/* CV Preview Thumbnail */}
                   <div
-                    className="aspect-[210/297] bg-slate-100 rounded-lg border border-slate-200 mb-4 overflow-hidden cursor-pointer group-hover:border-blue-300 transition-colors"
+                    className="aspect-210/297 bg-slate-100 rounded-lg border border-slate-200 mb-4 overflow-hidden cursor-pointer group-hover:border-blue-300 transition-colors"
                     onClick={() => router.push(`/editor/${cv.id}`)}
                   >
                     <div className="w-full h-full p-4 space-y-2">

@@ -1,3 +1,4 @@
+import type { CookieOptions, SetAllCookies } from "@supabase/ssr";
 import { createBrowserClient } from "@supabase/ssr";
 
 export function createClient() {
@@ -12,19 +13,7 @@ export function createClient() {
             return { name, value: decodeURIComponent(rest.join("=")) };
           });
         },
-        setAll(
-          cookiesToSet: Array<{
-            name: string;
-            value: string;
-            options?: {
-              path?: string;
-              maxAge?: number;
-              domain?: string;
-              sameSite?: string;
-              secure?: boolean;
-            };
-          }>
-        ) {
+        setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
           cookiesToSet.forEach(({ name, value, options }) => {
             let cookieString = `${name}=${encodeURIComponent(value)}`;
 
@@ -37,8 +26,11 @@ export function createClient() {
             if (options?.domain) {
               cookieString += `; domain=${options.domain}`;
             }
-            if (options?.sameSite) {
-              cookieString += `; samesite=${options.sameSite}`;
+            if (options?.sameSite !== undefined) {
+              const sameSite = normalizeSameSite(options);
+              if (sameSite) {
+                cookieString += `; samesite=${sameSite}`;
+              }
             }
             if (options?.secure) {
               cookieString += `; secure`;
@@ -50,4 +42,11 @@ export function createClient() {
       },
     }
   );
+}
+
+function normalizeSameSite(options?: CookieOptions) {
+  if (!options || options.sameSite === undefined) return undefined;
+  if (options.sameSite === true) return "strict";
+  if (options.sameSite === false) return undefined;
+  return options.sameSite;
 }

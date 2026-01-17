@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
+import type { CookieOptions, SetAllCookies } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -14,9 +15,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(
-          cookiesToSet: Array<{ name: string; value: string; options?: any }>
-        ) {
+        setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
@@ -24,7 +23,7 @@ export async function middleware(request: NextRequest) {
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, normalizeOptions(options))
           );
         },
       },
@@ -49,7 +48,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Admin routes require admin check (done in the page/API route)
-  // Middleware only checks authentication
+  // Proxy only checks authentication
 
   // Redirect authenticated users away from auth pages
   const authPaths = ["/auth/login", "/auth/signup"];
@@ -71,3 +70,18 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+
+function normalizeOptions(options?: CookieOptions) {
+  if (!options) return undefined;
+  if (options.sameSite === undefined) return options;
+  return {
+    ...options,
+    sameSite: normalizeSameSite(options),
+  };
+}
+
+function normalizeSameSite(options: CookieOptions) {
+  if (options.sameSite === true) return "strict";
+  if (options.sameSite === false) return undefined;
+  return options.sameSite;
+}

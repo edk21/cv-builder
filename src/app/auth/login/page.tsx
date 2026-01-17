@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import * as React from "react";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { LuFileText as FileText, LuLoader as Loader2, LuLock as Lock, LuMail as Mail } from "react-icons/lu";
 
 function LoginFormContent() {
@@ -16,18 +16,17 @@ function LoginFormContent() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [redirectUrl, setRedirectUrl] = useState("/dashboard");
-
-  useEffect(() => {
-    // Déterminer l'URL de redirection
-    const redirect = searchParams.get('redirect');
-    const savedRedirect = localStorage.getItem('cvDraftRedirect');
-
-    if (redirect === 'editor' && savedRedirect) {
-      setRedirectUrl(savedRedirect);
-    } else if (redirect === 'editor') {
-      setRedirectUrl('/editor/new');
+  const redirectUrl = React.useMemo(() => {
+    const redirect = searchParams.get("redirect");
+    if (redirect === "editor") {
+      try {
+        const savedRedirect = localStorage.getItem("cvDraftRedirect");
+        return savedRedirect || "/editor/new";
+      } catch {
+        return "/editor/new";
+      }
     }
+    return "/dashboard";
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -163,7 +162,7 @@ function LoginFormContent() {
         <p className="text-center text-xs text-muted-foreground mt-6">
           En vous connectant, vous acceptez nos{" "}
           <Link href="/terms" className="underline hover:text-foreground">
-            conditions d'utilisation
+            conditions d&apos;utilisation
           </Link>{" "}
           et notre{" "}
           <Link href="/privacy" className="underline hover:text-foreground">

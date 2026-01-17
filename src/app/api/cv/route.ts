@@ -2,17 +2,22 @@ import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { CVData, CVDBSchema } from "@/types/cv";
 import { NextRequest, NextResponse } from "next/server";
 import { checkSubscriptionLimits } from "@/lib/subscriptionService";
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+
+type SupabaseRow = Record<string, unknown>;
+type SupabaseError = PostgrestError | { message: string; code?: string } | null;
+type SupabaseResult = { data: SupabaseRow | null; error: SupabaseError };
 
 // HELPERS: Adapter functions to transform between DB and Frontend types
 
 // Helper function to handle missing columns by retrying without them
 async function insertWithFallback(
-  supabase: any,
-  payload: Record<string, any>,
+  supabase: SupabaseClient,
+  payload: Record<string, unknown>,
   maxRetries = 5
-): Promise<{ data: any; error: any }> {
-  let currentPayload = { ...payload };
-  let lastError: any = null;
+): Promise<SupabaseResult> {
+  const currentPayload = { ...payload };
+  let lastError: SupabaseError = null;
 
   // Essential columns that should never be removed (required for table structure)
   const essentialColumns = new Set([
@@ -34,7 +39,7 @@ async function insertWithFallback(
       .single();
 
     if (!error) {
-      return { data, error: null };
+      return { data: (data as SupabaseRow) ?? null, error: null };
     }
 
     // If it's a missing column error, remove that column and retry
@@ -63,7 +68,7 @@ async function insertWithFallback(
           likelyExistingColumns.has(missingColumn)
         ) {
           // Create a more helpful error message
-          const helpfulError = {
+          const helpfulError: SupabaseError = {
             ...error,
             message: `La structure de la table 'cvs' ne correspond pas au schéma attendu. La colonne '${missingColumn}' est manquante. Veuillez exécuter le script de migration SQL (supabase/fix_columns.sql) pour mettre à jour la structure de la base de données.`,
           };
@@ -95,13 +100,13 @@ async function insertWithFallback(
 }
 
 async function updateWithFallback(
-  supabase: any,
-  payload: Record<string, any>,
+  supabase: SupabaseClient,
+  payload: Record<string, unknown>,
   id: string,
   maxRetries = 5
-): Promise<{ data: any; error: any }> {
-  let currentPayload = { ...payload };
-  let lastError: any = null;
+): Promise<SupabaseResult> {
+  const currentPayload = { ...payload };
+  let lastError: SupabaseError = null;
 
   // Essential columns that should never be removed (required for table structure)
   const essentialColumns = new Set([
@@ -124,7 +129,7 @@ async function updateWithFallback(
       .single();
 
     if (!error) {
-      return { data, error: null };
+      return { data: (data as SupabaseRow) ?? null, error: null };
     }
 
     // If it's a missing column error, remove that column and retry
@@ -153,7 +158,7 @@ async function updateWithFallback(
           likelyExistingColumns.has(missingColumn)
         ) {
           // Create a more helpful error message
-          const helpfulError = {
+          const helpfulError: SupabaseError = {
             ...error,
             message: `La structure de la table 'cvs' ne correspond pas au schéma attendu. La colonne '${missingColumn}' est manquante. Veuillez exécuter le script de migration SQL (supabase/fix_columns.sql) pour mettre à jour la structure de la base de données.`,
           };
@@ -342,7 +347,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(mapDBToCV(data as CVDBSchema));
+    return NextResponse.json(mapDBToCV(data as unknown as CVDBSchema));
   } catch (error) {
     console.error("Server error in POST:", error);
     const errorMessage =
@@ -446,7 +451,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(mapDBToCV(data as CVDBSchema));
+    return NextResponse.json(mapDBToCV(data as unknown as CVDBSchema));
   } catch (error) {
     console.error("Server error in PUT:", error);
     const errorMessage =

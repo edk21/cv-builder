@@ -42,10 +42,12 @@ export function DatePicker({
   className,
   id,
 }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false);
   const { t, language } = useTranslation();
   const currentLocale = locales[language as keyof typeof locales] || fr;
   const defaultPlaceholder = t("editor.datePicker.placeholder");
-  const triggerId = id ?? React.useId();
+  const generatedId = React.useId();
+  const triggerId = id ?? generatedId;
   const labelId = `${triggerId}-label`;
 
   // Parse the date string safely
@@ -61,16 +63,18 @@ export function DatePicker({
         return parse(date, "yyyy-MM", new Date());
       }
       return new Date(date);
-    } catch (e) {
+    } catch {
       return undefined;
     }
   }, [date]);
 
   const handleSelect = (newDate: Date | undefined) => {
-    if (newDate && onChange) {
+    if (!newDate) return;
+    if (onChange) {
       // We store as YYYY-MM-DD to be consistent
       onChange(format(newDate, "yyyy-MM-dd"));
     }
+    setOpen(false);
   };
 
   return (
@@ -80,7 +84,7 @@ export function DatePicker({
           {label}
         </label>
       )}
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -107,6 +111,7 @@ export function DatePicker({
             onSelect={handleSelect}
             initialFocus
             locale={currentLocale}
+            captionLayout="dropdown"
           />
         </PopoverContent>
       </Popover>

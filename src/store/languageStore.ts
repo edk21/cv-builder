@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Language, translations } from "@/lib/i18n/translations";
-import { useEffect, useState } from "react";
+
 
 interface LanguageStore {
   language: Language;
@@ -30,11 +30,7 @@ export const useLanguageStore = create<LanguageStore>()(
 // Hook helper for easier usage with hydration safety
 export function useTranslation() {
   const { language, setLanguage, t } = useLanguageStore();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = typeof window !== "undefined";
 
   // Return default language translations during SSR/hydration
   const safeT = (key: string) => {

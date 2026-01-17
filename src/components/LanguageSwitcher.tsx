@@ -56,18 +56,21 @@ export function LanguageSwitcher({ variant = "dropdown", className }: LanguageSw
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      setFocusedIndex(currentIndex);
-      window.requestAnimationFrame(() => {
-        optionRefs.current[currentIndex]?.focus();
-      });
-    }
-  }, [currentIndex, isOpen]);
+    if (!isOpen) return;
+    window.requestAnimationFrame(() => {
+      optionRefs.current[focusedIndex]?.focus();
+    });
+  }, [focusedIndex, isOpen]);
+
+  const openDropdown = () => {
+    setFocusedIndex(currentIndex);
+    setIsOpen(true);
+  };
 
   const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "Enter" || event.key === " " || event.key === "ArrowDown") {
       event.preventDefault();
-      setIsOpen(true);
+      openDropdown();
     }
   };
 
@@ -131,7 +134,13 @@ export function LanguageSwitcher({ variant = "dropdown", className }: LanguageSw
   return (
     <div ref={dropdownRef} className={cn("relative", className)}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false);
+            return;
+          }
+          openDropdown();
+        }}
         onKeyDown={handleTriggerKeyDown}
         type="button"
         className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg border border-input bg-background hover:bg-accent transition-colors"
