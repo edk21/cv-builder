@@ -216,10 +216,10 @@ export function CVPreview() {
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline text-(--theme-color)"
+                        className="flex items-center gap-1 text-xs hover:underline text-(--theme-color) break-all"
                       >
                         <Globe className="w-3 h-3" />
-                        <span>Demo</span>
+                        <span>{project.url}</span>
                       </a>
                     )}
                     {project.github && (
@@ -227,10 +227,10 @@ export function CVPreview() {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline text-(--theme-color)"
+                        className="flex items-center gap-1 text-xs hover:underline text-(--theme-color) break-all"
                       >
                         <Github className="w-3 h-3" />
-                        <span>GitHub</span>
+                        <span>{project.github}</span>
                       </a>
                     )}
                   </div>
@@ -416,10 +416,10 @@ export function CVPreview() {
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline text-slate-500"
+                        className="flex items-center gap-1 text-xs hover:underline text-slate-500 break-all"
                       >
                         <Globe className="w-3 h-3" />
-                        <span>Demo</span>
+                        <span>{project.url}</span>
                       </a>
                     )}
                     {project.github && (
@@ -427,10 +427,10 @@ export function CVPreview() {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs hover:underline text-slate-500"
+                        className="flex items-center gap-1 text-xs hover:underline text-slate-500 break-all"
                       >
                         <Github className="w-3 h-3" />
-                        <span>GitHub</span>
+                        <span>{project.github}</span>
                       </a>
                     )}
                   </div>
@@ -749,11 +749,11 @@ export function CVPreview() {
                           href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs hover:underline text-(--theme-color)"
-                          aria-label={`Demo of ${project.name}`}
+                          className="flex items-center gap-1 text-xs hover:underline text-(--theme-color) break-all"
+                          aria-label={`URL du projet ${project.name || t("cv.placeholder.project")}`}
                         >
                           <Globe className="w-3 h-3" />
-                          <span>Demo</span>
+                          <span>{project.url}</span>
                         </a>
                       )}
                       {project.github && (
@@ -761,11 +761,11 @@ export function CVPreview() {
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs hover:underline text-(--theme-color)"
-                          aria-label={`GitHub repository of ${project.name}`}
+                          className="flex items-center gap-1 text-xs hover:underline text-(--theme-color) break-all"
+                          aria-label={`Depot GitHub du projet ${project.name || t("cv.placeholder.project")}`}
                         >
                           <Github className="w-3 h-3" />
-                          <span>GitHub</span>
+                          <span>{project.github}</span>
                         </a>
                       )}
                     </div>
@@ -1197,15 +1197,16 @@ export function CVPreview() {
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-bold text-slate-900">{project.name || t("cv.placeholder.project")}</h3>
                         <div className="flex gap-2">
-                          {project.url && (
+                        {project.url && (
                              <a
                                href={project.url}
                                target="_blank"
                                rel="noopener noreferrer"
-                               className="text-slate-400 hover:text-slate-800"
-                               aria-label={`Demo de ${project.name || t("cv.placeholder.project")}`}
+                               className="text-slate-400 hover:text-slate-800 break-all flex items-center gap-1 text-xs"
+                               aria-label={`URL du projet ${project.name || t("cv.placeholder.project")}`}
                              >
                                <Globe className="w-4 h-4" />
+                               <span>{project.url}</span>
                              </a>
                           )}
                           {project.github && (
@@ -1213,10 +1214,11 @@ export function CVPreview() {
                                href={project.github}
                                target="_blank"
                                rel="noopener noreferrer"
-                               className="text-slate-400 hover:text-slate-800"
-                               aria-label={`Depot GitHub de ${project.name || t("cv.placeholder.project")}`}
+                               className="text-slate-400 hover:text-slate-800 break-all flex items-center gap-1 text-xs"
+                               aria-label={`Depot GitHub du projet ${project.name || t("cv.placeholder.project")}`}
                              >
                                <Github className="w-4 h-4" />
+                               <span>{project.github}</span>
                              </a>
                           )}
                         </div>
